@@ -9,7 +9,7 @@
 [![Version](https://img.shields.io/npm/v/serverful.svg)](https://www.npmjs.com/package/serverful)
 [![Downloads](https://img.shields.io/npm/dt/serverful.svg)](https://www.npmjs.com/package/serverful) 
 
-Uses [hapi](https://github.com/hapijs/hapijs) with most important plugins ([Boom](https://github.com/hapijs/boom), [Vision](https://github.com/hapijs/vision), [Inert](https://github.com/hapijs/inert)) and dynamically detects your routes
+Uses [hapi](https://github.com/hapijs/hapijs) loaded with most important plugins ([Boom](https://github.com/hapijs/boom), [Vision](https://github.com/hapijs/vision), [Inert](https://github.com/hapijs/inert)) and dynamically configures your routes
 
 ### Features
 * Out-of-the-box `/ping` and a `/healthcheck` (using [health-checkup](https://github.com/hfreire/health-checkup)) endpoints :white_check_mark:
