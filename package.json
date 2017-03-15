@@ -1,0 +1,64 @@
+{
+  "name": "serverful",
+  "description": "",
+  "version": "0.0.0",
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hfreire/serverful.git"
+  },
+  "author": "Hugo Freire <hugo@exec.sh>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hfreire/serverful/issues"
+  },
+  "homepage": "https://github.com/hfreire/serverful#readme",
+  "dependencies": {
+    "bluebird": "3.5.0",
+    "boom": "4.2.0",
+    "hapi": "16.1.0",
+    "hapi-swagger": "7.7.0",
+    "health-checkup": "1.0.6",
+    "inert": "4.1.0",
+    "joi": "10.2.2",
+    "lodash": "4.17.4",
+    "modern-logger": "1.2.1",
+    "vision": "4.1.1"
+  },
+  "devDependencies": {
+    "babel-cli": "6.23.0",
+    "babel-eslint": "7.1.1",
+    "babel-preset-es2015": "6.22.0",
+    "chai": "3.5.0",
+    "chai-as-promised": "6.0.0",
+    "coveralls": "2.12.0",
+    "eslint": "3.17.0",
+    "eslint-config-standard": "7.0.0",
+    "eslint-plugin-mocha": "4.8.0",
+    "eslint-plugin-node": "4.2.0",
+    "eslint-plugin-promise": "3.5.0",
+    "eslint-plugin-standard": "2.1.1",
+    "istanbul": "0.4.5",
+    "mocha": "3.2.0",
+    "semantic-release": "6.3.2",
+    "pre-git": "3.14.0",
+    "standard": "9.0.0",
+    "testdouble": "1.11.2"
+  },
+  "config": {
+    "pre-git": {
+      "commit-msg": "conventional"
+    }
+  },
+  "scripts": {
+    "clean": "rm -rf lib coverage",
+    "lint": "./node_modules/.bin/eslint .",
+    "coverage": "node_modules/.bin/istanbul cover --include-all-sources --root src --print detail ./node_modules/mocha/bin/_mocha -- --recursive test",
+    "test": "npm run lint && npm run coverage",
+    "compile": "npm run clean && mkdir -p lib && ./node_modules/.bin/babel src/ -d lib",
+    "prepublish": "npm run compile",
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
+    "semantic-release": "./node_modules/.bin/semantic-release pre && npm publish && node_modules/.bin/semantic-release post",
+    "commit": "./node_modules/.bin/commit-wizard"
+  }
+}
