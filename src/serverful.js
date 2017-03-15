@@ -68,13 +68,14 @@ const configureRoutes = function () {
           }
 
           try {
-            const module = require(join(__dirname, `/routes/${entry}`))
+            const module = require(join(path, `/routes/${entry}`))
 
             this.http.route(module.toRoute())
           } catch (error) {
             Logger.error(error)
           }
         })
+        .catch(() => {})
     })
 }
 
