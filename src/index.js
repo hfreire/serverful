@@ -5,4 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-module.exports = require('./serverful')
+module.exports = {
+  Serverful: require('./serverful'),
+  Route: require('./routes/route')
+}
