@@ -9,9 +9,12 @@
 [![Version](https://img.shields.io/npm/v/serverful.svg)](https://www.npmjs.com/package/serverful)
 [![Downloads](https://img.shields.io/npm/dt/serverful.svg)](https://www.npmjs.com/package/serverful) 
 
-Uses [hapi](https://github.com/hapijs/hapijs) with most important plugins and dynamically detects your routes
+Uses [hapi](https://github.com/hapijs/hapijs) with most important plugins ([Boom](https://github.com/hapijs/boom), [Vision](https://github.com/hapijs/vision), [Inert](https://github.com/hapijs/inert)) and dynamically detects your routes
 
 ### Features
+* Out-of-the-box `/ping` and a `/healthcheck` (using [health-checkup](https://github.com/hfreire/health-checkup)) endpoints :white_check_mark:
+* [Swagger](http://swagger.io) API `/docs` :white_check_mark: 
+* Logs HTTP requests and server errors using [modern-logger](https://github.com/hfreire/modern-logger) :white_check_mark:
 * Supports [Bluebird](https://github.com/petkaantonov/bluebird) :bird: promises :white_check_mark:
 
 ### How to install
@@ -20,6 +23,16 @@ node install serverful
 ```
 
 ### How to use
+
+#### Available environment variables
+Variable | Description | Required | Default value
+:---:|:---:|:---:|:---:
+NAME | The name of the server | false | `null`
+VERSION | The version of the server | false | `null`
+PORT | The port to be used by the HTTP server | false | `3000`
+API_KEYS | The API KEYS that should be used when securing endpoints | false | `null`
+ENVIRONMENT | The environment the app is running on | false | `null`
+ROLLBAR_API_KEY | The server API key used to talk with Rollbar | false | `null`
 
 #### Use it in your app
 ```javascript
