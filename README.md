@@ -44,4 +44,4 @@ server.start()
 ```
 
 ### Used by
-*  [A web browser :earth_americas: hosted as a service, to render your JavaScript web pages as HTML](https://github.com/hfreire/browser-as-a-service)
+*  [serverful - A web browser :earth_americas: hosted as a service, to render your JavaScript web pages as HTML](https://github.com/hfreire/browser-as-a-service)
