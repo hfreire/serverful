@@ -27,6 +27,8 @@ class Route {
 
   cors () {}
 
+  pre () {}
+
   toRoute () {
     return {
       method: this.method,
@@ -40,7 +42,8 @@ class Route {
         description: this.description,
         notes: this.notes,
         validate: this.validate(),
-        cors: this.cors()
+        cors: this.cors(),
+        pre: this.pre()
       }
     }
   }
