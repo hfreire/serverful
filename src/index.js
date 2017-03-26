@@ -7,6 +7,5 @@
 
 module.exports = {
   Serverful: require('./serverful'),
-  Route: require('./routes/route'),
-  PingRoute: require('./routes/ping')
+  Route: require('./routes/route')
 }
