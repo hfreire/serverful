@@ -10,8 +10,8 @@ const Route = require('./route')
 const Joi = require('joi')
 
 class Ping extends Route {
-  constructor () {
-    super('GET', '/ping', 'Ping service', 'Returns a pong for every ping')
+  constructor (method = 'GET', path = '/ping', description = 'Ping service', notes = 'Returns a pong for every ping') {
+    super(method, path, description, notes)
   }
 
   handler (request, reply) {
