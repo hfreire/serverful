@@ -27,12 +27,12 @@ node install serverful
 #### Available environment variables
 Variable | Description | Required | Default value
 :---:|:---:|:---:|:---:
-NAME | The name of the server | false | `null`
-VERSION | The version of the server | false | `null`
+NAME | The name of the server | false | `undefined`
+VERSION | The version of the server | false | `undefined`
 PORT | The port to be used by the HTTP server | false | `3000`
-API_KEYS | The secret keys that should be used when securing endpoints | false | `null`
-ENVIRONMENT | The environment the app is running on | false | `null`
-ROLLBAR_API_KEY | The server API key used to talk with Rollbar | false | `null`
+API_KEYS | The secret keys that should be used when securing endpoints | false | `undefined`
+ENVIRONMENT | The environment the app is running on | false | `undefined`
+ROLLBAR_API_KEY | The server API key used to talk with Rollbar | false | `undefined`
 
 #### Use it in your app
 ```javascript
