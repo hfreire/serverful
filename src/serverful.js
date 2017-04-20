@@ -9,6 +9,7 @@ const NAME = process.env.NAME
 const VERSION = process.env.VERSION
 const PORT = process.env.PORT || 3000
 const API_KEYS = process.env.API_KEYS
+const SO_TIMEOUT = process.env.SO_TIMEOUT
 
 const _ = require('lodash')
 const Promise = require('bluebird')
@@ -81,7 +82,8 @@ const configureRoutes = function () {
 
 class Serverful {
   constructor (options = { port: PORT }) {
-    this.http = new Hapi.Server({ debug: false, load: { sampleInterval: 60000 } })
+    const connections = { routes: { timeout: { socket: SO_TIMEOUT } } }
+    this.http = new Hapi.Server({ debug: false, load: { sampleInterval: 60000 }, connections })
 
     this.http.connection(options)
 
