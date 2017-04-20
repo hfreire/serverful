@@ -82,7 +82,7 @@ const configureRoutes = function () {
 
 class Serverful {
   constructor (options = { port: PORT }) {
-    const connections = { routes: { timeout: { socket: SO_TIMEOUT } } }
+    const connections = { routes: { timeout: { server: false, socket: SO_TIMEOUT } } }
     this.http = new Hapi.Server({ debug: false, load: { sampleInterval: 60000 }, connections })
 
     this.http.connection(options)
