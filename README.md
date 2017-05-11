@@ -19,7 +19,7 @@ Uses [hapi](https://github.com/hapijs/hapijs) loaded with most important plugins
 
 ### How to install
 ```
-node install serverful
+npm install serverful
 ```
 
 ### How to use
