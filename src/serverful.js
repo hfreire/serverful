@@ -37,7 +37,6 @@ const HapiSwagger = {
 const HapiPagination = {
   register: require('hapi-pagination'),
   options: {
-    enabled: false,
     routes: {
       include: []  // Emptying include list will disable pagination
     }
@@ -74,7 +73,7 @@ const configureRoutes = function () {
     .mapSeries((path) => {
       return readdirAsync(join(path, '/routes'))
         .mapSeries((entry) => {
-          if (entry === 'route.js' || !_.endsWith('.js') || _.startsWith('.')) {
+          if (entry === 'route.js' || !_.endsWith(entry, '.js') || _.startsWith(entry, '.')) {
             return
           }
 
