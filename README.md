@@ -9,11 +9,12 @@
 [![Version](https://img.shields.io/npm/v/serverful.svg)](https://www.npmjs.com/package/serverful)
 [![Downloads](https://img.shields.io/npm/dt/serverful.svg)](https://www.npmjs.com/package/serverful) 
 
-Uses [hapi](https://github.com/hapijs/hapijs) loaded with most important plugins ([Boom](https://github.com/hapijs/boom), [Vision](https://github.com/hapijs/vision), [Inert](https://github.com/hapijs/inert)) and dynamically configures your routes
+Uses [hapi](https://github.com/hapijs/hapijs) loaded with most important plugins ([Boom](https://github.com/hapijs/boom), [Vision](https://github.com/hapijs/vision), [Inert](https://github.com/hapijs/inert), et al.) and dynamically configures your routes
 
 ### Features
 * Out-of-the-box `/ping` and a `/healthcheck` (using [health-checkup](https://github.com/hfreire/health-checkup)) endpoints :white_check_mark:
 * [Swagger](http://swagger.io) API `/docs` :white_check_mark: 
+* Response pagination using [hapi-pagination](https://github.com/fknop/hapi-pagination) :white_check_mark:
 * Logs HTTP requests and server errors using [modern-logger](https://github.com/hfreire/modern-logger) :white_check_mark:
 * Supports [Bluebird](https://github.com/petkaantonov/bluebird) :bird: promises :white_check_mark:
 
