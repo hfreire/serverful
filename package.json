@@ -17,6 +17,7 @@
     "bluebird": "3.5.0",
     "boom": "5.0.0",
     "hapi": "16.1.1",
+    "hapi-pagination": "^1.20.0",
     "hapi-swagger": "7.7.0",
     "health-checkup": "1.0.8",
     "inert": "4.2.0",

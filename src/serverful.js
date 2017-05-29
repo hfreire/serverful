@@ -20,8 +20,30 @@ const Health = require('health-checkup')
 
 const Hapi = require('hapi')
 const Boom = require('boom')
+
 const Inert = require('inert')
 const Vision = require('vision')
+const HapiSwagger = {
+  register: require('hapi-swagger'),
+  options: {
+    info: { title: NAME, version: VERSION },
+    documentationPath: '/docs',
+    tags: [
+      { name: 'ping', description: 'Query service status' },
+      { name: 'healthcheck', description: 'Query service health' }
+    ]
+  }
+}
+const HapiPagination = {
+  register: require('hapi-pagination'),
+  options: {
+    enabled: false,
+    routes: {
+      include: []  // Emptying include list will disable pagination
+    }
+  }
+}
+const plugins = [ Inert, Vision, HapiSwagger, HapiPagination ]
 
 const apiKeys = _.words(API_KEYS, /[^, ]+/g)
 
@@ -41,18 +63,6 @@ const apiKeyScheme = () => {
 
       return reply.continue({ credentials: { apiKey } })
     }
-  }
-}
-
-const HapiSwagger = {
-  register: require('hapi-swagger'),
-  options: {
-    info: { title: NAME, version: VERSION },
-    documentationPath: '/docs',
-    tags: [
-      { name: 'ping', description: 'Query service status' },
-      { name: 'healthcheck', description: 'Query service health' }
-    ]
   }
 }
 
@@ -105,7 +115,7 @@ class Serverful {
     this.http.auth.strategy('default', 'apiKey')
     this.http.auth.default('default')
 
-    this.http.register([ Inert, Vision, HapiSwagger ])
+    this.http.register(plugins)
 
     configureRoutes.bind(this)()
 
