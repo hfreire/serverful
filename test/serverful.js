@@ -9,6 +9,8 @@ describe('Serverful', () => {
   let subject
   let Serverful
   let http
+  let pingRoute
+  let healthcheckRoute
 
   before(() => {
     http = td.object([ 'connection', 'auth', 'on', 'route', 'start', 'stop', 'register' ])
@@ -16,80 +18,57 @@ describe('Serverful', () => {
     http.auth.strategy = td.function()
     http.auth.default = td.function()
     http.app = td.object([])
+
+    pingRoute = td.object([ 'toRoute' ])
+    healthcheckRoute = td.object([ 'toRoute' ])
   })
 
   afterEach(() => td.reset())
 
   describe('when constructing a server', () => {
-    let pingRoute
-    let healthcheckRoute
-
-    before(() => {
-      Serverful = require('../src/serverful')
-      subject = new Serverful()
-    })
+    const pingRouteConfig = {}
+    const healthcheckRouteConfig = {}
 
     beforeEach(() => {
       td.replace('hapi', { 'Server': function () { return http } })
 
-      pingRoute = td.object([])
-      const ping = td.replace('../src/routes/ping', td.object([ 'toRoute' ]))
-      td.when(ping.toRoute()).thenReturn(pingRoute)
+      td.replace('../src/routes/ping', pingRoute)
+      td.when(pingRoute.toRoute()).thenReturn(pingRouteConfig)
 
-      healthcheckRoute = td.object([])
-      const healthcheck = td.replace('../src/routes/healthcheck', td.object([ 'toRoute' ]))
-      td.when(healthcheck.toRoute()).thenReturn(healthcheckRoute)
-    })
+      td.replace('../src/routes/healthcheck', healthcheckRoute)
+      td.when(healthcheckRoute.toRoute()).thenReturn(healthcheckRouteConfig)
 
-    afterEach(() => {
-      delete require.cache[ require.resolve('../src/serverful') ]
+      Serverful = require('../src/serverful')
+      subject = new Serverful()
     })
 
     it('should listen on hapi server start event', () => {
-      Serverful = require('../src/serverful')
-      subject = new Serverful()
-
       td.verify(http.on('start'), { times: 1, ignoreExtraArgs: true })
     })
 
     it('should listen on hapi server stop event', () => {
-      Serverful = require('../src/serverful')
-      subject = new Serverful()
-
       td.verify(http.on('stop'), { times: 1, ignoreExtraArgs: true })
     })
 
     it('should listen on hapi server response event', () => {
-      Serverful = require('../src/serverful')
-      subject = new Serverful()
-
       td.verify(http.on('response'), { times: 1, ignoreExtraArgs: true })
     })
 
     it('should listen on hapi server request-error', () => {
-      Serverful = require('../src/serverful')
-      subject = new Serverful()
-
       td.verify(http.on('request-error'), { times: 1, ignoreExtraArgs: true })
     })
 
     it.skip('should configure route to ping ', () => {
-      Serverful = require('../src/serverful')
-      subject = new Serverful()
-
-      td.verify(http.route(pingRoute), { times: 1 })
+      td.verify(http.route(pingRouteConfig), { times: 1 })
     })
 
     it.skip('should configure route to healthcheck ', () => {
-      Serverful = require('../src/serverful')
-      subject = new Serverful()
-
-      td.verify(http.route(healthcheckRoute), { times: 1 })
+      td.verify(http.route(healthcheckRouteConfig), { times: 1 })
     })
   })
 
   describe('when starting server', () => {
-    before(() => {
+    beforeEach(() => {
       td.when(http.start()).thenCallback()
 
       td.replace('hapi', { 'Server': function () { return http } })
@@ -107,7 +86,7 @@ describe('Serverful', () => {
   })
 
   describe('when stopping a running server', () => {
-    before(() => {
+    beforeEach(() => {
       td.when(http.start()).thenCallback()
       td.when(http.stop()).thenCallback()
 

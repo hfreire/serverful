@@ -81,7 +81,7 @@ const configureRoutes = function () {
           try {
             const module = require(join(path, `/routes/${entry}`))
 
-            this.http.route(module.toRoute())
+            this._http.route(module.toRoute())
           } catch (error) {
             Logger.error(error)
           }
@@ -93,13 +93,13 @@ const configureRoutes = function () {
 class Serverful {
   constructor (options = { port: PORT }) {
     const connections = { routes: { timeout: { server: false, socket: SO_TIMEOUT } } }
-    this.http = new Hapi.Server({ debug: false, load: { sampleInterval: 60000 }, connections })
+    this._http = new Hapi.Server({ debug: false, load: { sampleInterval: 60000 }, connections })
 
-    this.http.connection(options)
+    this._http.connection(options)
 
-    this.http.on('start', () => Logger.info(`Started :rocket: HTTP server on port ${PORT}`))
-    this.http.on('stop', () => Logger.info('Stopped HTTP server'))
-    this.http.on('response', ({ info, method, url, response, headers, query }) => {
+    this._http.on('start', () => Logger.info(`Started :rocket: HTTP server on port ${PORT}`))
+    this._http.on('stop', () => Logger.info('Stopped HTTP server'))
+    this._http.on('response', ({ info, method, url, response, headers, query }) => {
       const remoteAddress = info.remoteAddress
       const path = url.path
       const statusCode = response.statusCode
@@ -109,18 +109,18 @@ class Serverful {
 
       Logger.info(`${remoteAddress} - "${method.toUpperCase()} ${path}" ${statusCode} ${duration} "${userAgent}" "${apiKey}"`)
     })
-    this.http.on('request-error', (request, error) => Logger.error(error))
+    this._http.on('request-error', (request, error) => Logger.error(error))
 
-    this.http.auth.scheme('apiKey', apiKeyScheme)
-    this.http.auth.strategy('default', 'apiKey')
-    this.http.auth.default('default')
+    this._http.auth.scheme('apiKey', apiKeyScheme)
+    this._http.auth.strategy('default', 'apiKey')
+    this._http.auth.default('default')
 
-    this.http.register(plugins)
+    this._http.register(plugins)
 
     configureRoutes.bind(this)()
 
     Health.addCheck('server', () => new Promise((resolve, reject) => {
-      if (!this.http.load) {
+      if (!this._http.load) {
         return reject(new Error('Unable to read server load metrics'))
       }
 
@@ -130,16 +130,16 @@ class Serverful {
 
   start () {
     return new Promise((resolve, reject) => {
-      if (this.http.app.isRunning) {
+      if (this._http.app.isRunning) {
         return resolve()
       }
 
-      this.http.start((error) => {
+      this._http.start((error) => {
         if (error) {
           return reject(error)
         }
 
-        this.http.app.isRunning = true
+        this._http.app.isRunning = true
 
         resolve()
       })
@@ -148,12 +148,12 @@ class Serverful {
 
   stop () {
     return new Promise((resolve, reject) => {
-      if (!this.http.app.isRunning) {
+      if (!this._http.app.isRunning) {
         return resolve()
       }
 
-      this.http.stop((error) => {
-        delete this.http.app.isRunning
+      this._http.stop((error) => {
+        delete this._http.app.isRunning
 
         if (error) {
           return reject(error)
