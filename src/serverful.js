@@ -74,7 +74,7 @@ const configureRoutes = function () {
     .mapSeries((path) => {
       return readdirAsync(join(path, '/routes'))
         .mapSeries((entry) => {
-          if (entry.indexOf('route.js') > -1) {
+          if (entry === 'route.js' || !_.endsWith('.js') || _.startsWith('.')) {
             return
           }
 
