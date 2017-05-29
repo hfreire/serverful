@@ -90,4 +90,18 @@ describe('Healthcheck', () => {
         })
     })
   })
+
+  describe('when authenticating request', () => {
+    beforeEach(() => {
+      td.replace('health-checkup', Health)
+
+      subject = require('../../src/routes/healthcheck')
+    })
+
+    it('should allow unauthenticated requests', () => {
+      const auth = subject.auth()
+
+      auth.should.be.equal(false)
+    })
+  })
 })

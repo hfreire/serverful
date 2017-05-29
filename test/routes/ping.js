@@ -32,4 +32,28 @@ describe('Ping', () => {
       response.answer.should.be.equal('pong')
     })
   })
+
+  describe('when authenticating request', () => {
+    beforeEach(() => {
+      subject = require('../../src/routes/ping')
+    })
+
+    it('should allow unauthenticated requests', () => {
+      const auth = subject.auth()
+
+      auth.should.be.equal(false)
+    })
+  })
+
+  describe('when configuring plugins', () => {
+    beforeEach(() => {
+      subject = require('../../src/routes/ping')
+    })
+
+    it('should configure hapi-swagger plugin', () => {
+      const plugins = subject.plugins()
+
+      plugins.should.have.property('hapi-swagger')
+    })
+  })
 })
