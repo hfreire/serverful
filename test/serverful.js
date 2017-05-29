@@ -7,8 +7,9 @@
 
 describe('Serverful', () => {
   let subject
-  let Serverful
   let http
+  let Logger
+  let Health
   let pingRoute
   let healthcheckRoute
 
@@ -18,6 +19,10 @@ describe('Serverful', () => {
     http.auth.strategy = td.function()
     http.auth.default = td.function()
     http.app = td.object([])
+
+    Logger = td.object([ 'info', 'error' ])
+
+    Health = td.object([ 'addCheck' ])
 
     pingRoute = td.object([ 'toRoute' ])
     healthcheckRoute = td.object([ 'toRoute' ])
@@ -32,13 +37,17 @@ describe('Serverful', () => {
     beforeEach(() => {
       td.replace('hapi', { 'Server': function () { return http } })
 
+      td.replace('modern-logger', Logger)
+
+      td.replace('health-checkup', Health)
+
       td.replace('../src/routes/ping', pingRoute)
       td.when(pingRoute.toRoute()).thenReturn(pingRouteConfig)
 
       td.replace('../src/routes/healthcheck', healthcheckRoute)
       td.when(healthcheckRoute.toRoute()).thenReturn(healthcheckRouteConfig)
 
-      Serverful = require('../src/serverful')
+      const Serverful = require('../src/serverful')
       subject = new Serverful()
     })
 
@@ -69,11 +78,14 @@ describe('Serverful', () => {
 
   describe('when starting server', () => {
     beforeEach(() => {
+      td.replace('hapi', { 'Server': function () { return http } })
       td.when(http.start()).thenCallback()
 
-      td.replace('hapi', { 'Server': function () { return http } })
+      td.replace('modern-logger', Logger)
 
-      Serverful = require('../src/serverful')
+      td.replace('health-checkup', Health)
+
+      const Serverful = require('../src/serverful')
       subject = new Serverful()
     })
 
@@ -87,12 +99,15 @@ describe('Serverful', () => {
 
   describe('when stopping a running server', () => {
     beforeEach(() => {
+      td.replace('hapi', { 'Server': function () { return http } })
       td.when(http.start()).thenCallback()
       td.when(http.stop()).thenCallback()
 
-      td.replace('hapi', { 'Server': function () { return http } })
+      td.replace('modern-logger', Logger)
 
-      Serverful = require('../src/serverful')
+      td.replace('health-checkup', Health)
+
+      const Serverful = require('../src/serverful')
       subject = new Serverful()
       return subject.start()
     })
