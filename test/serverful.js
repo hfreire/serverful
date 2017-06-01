@@ -119,4 +119,46 @@ describe('Serverful', () => {
         })
     })
   })
+
+  describe('when stopping a non-running server', () => {
+    beforeEach(() => {
+      td.replace('hapi', { 'Server': function () { return http } })
+
+      td.replace('modern-logger', Logger)
+
+      td.replace('health-checkup', Health)
+
+      const Serverful = require('../src/serverful')
+      subject = new Serverful()
+    })
+
+    it('should resolve', () => {
+      return subject.stop()
+    })
+  })
+
+  describe('when stopping a running server and hapi fails to stop', () => {
+    const error = new Error()
+
+    beforeEach(() => {
+      td.replace('hapi', { 'Server': function () { return http } })
+      td.when(http.start()).thenCallback()
+      td.when(http.stop()).thenCallback(error)
+
+      td.replace('modern-logger', Logger)
+
+      td.replace('health-checkup', Health)
+
+      const Serverful = require('../src/serverful')
+      subject = new Serverful()
+      return subject.start()
+    })
+
+    it('should reject with error', () => {
+      return subject.stop()
+        .catch((_error) => {
+          _error.should.be.equal(error)
+        })
+    })
+  })
 })
