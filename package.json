@@ -1,6 +1,6 @@
 {
   "name": "serverful",
-  "description": "",
+  "description": "A kickass web server with all the bells and whistles",
   "version": "0.0.0",
   "main": "lib/index.js",
   "repository": {
