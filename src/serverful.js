@@ -98,7 +98,11 @@ class Serverful {
 
     this._http.on('start', () => Logger.info(`Started :rocket: HTTP server on port ${PORT}`))
     this._http.on('stop', () => Logger.info('Stopped HTTP server'))
-    this._http.on('response', ({ info, method, url, response, headers, query }) => {
+    this._http.on('response', ({ info, method, url, response, headers, query, route }) => {
+      if (!_.includes(route.settings.tags, 'api')) {
+        return
+      }
+
       const remoteAddress = info.remoteAddress
       const path = url.path
       const statusCode = response.statusCode

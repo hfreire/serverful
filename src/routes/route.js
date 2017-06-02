@@ -23,6 +23,10 @@ class Route {
 
   plugins () {}
 
+  tags () {
+    return [ 'api' ]
+  }
+
   validate () {}
 
   cors () {}
@@ -38,7 +42,7 @@ class Route {
         handler: this.handler,
         auth: this.auth(),
         plugins: this.plugins(),
-        tags: [ 'api' ],
+        tags: this.tags(),
         description: this.description,
         notes: this.notes,
         validate: this.validate(),
