@@ -37,8 +37,8 @@ ROLLBAR_API_KEY | The server API key used to talk with Rollbar | false | `undefi
 SO_TIMEOUT | Node socket timeout. Defaults to 2 minutes. Set to false to disable socket timeouts. | false | `undefined`
 
 #### Use it in your app
+Load module and start a server
 ```javascript
-// Instantiate and start the server
 const Serverful = require('serverful')
 
 const server = new Serverful()
