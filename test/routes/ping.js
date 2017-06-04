@@ -33,12 +33,12 @@ describe('Ping', () => {
     })
   })
 
-  describe('when authenticating request', () => {
+  describe('when configuring authentication', () => {
     beforeEach(() => {
       subject = require('../../src/routes/ping')
     })
 
-    it('should allow unauthenticated requests', () => {
+    it('should not require authenticate', () => {
       const auth = subject.auth()
 
       auth.should.be.equal(false)

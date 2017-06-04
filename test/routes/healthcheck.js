@@ -91,14 +91,14 @@ describe('Healthcheck', () => {
     })
   })
 
-  describe('when authenticating request', () => {
+  describe('when configuring authentication', () => {
     beforeEach(() => {
       td.replace('health-checkup', Health)
 
       subject = require('../../src/routes/healthcheck')
     })
 
-    it('should allow unauthenticated requests', () => {
+    it('should not require authenticate', () => {
       const auth = subject.auth()
 
       auth.should.be.equal(false)
