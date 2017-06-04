@@ -25,6 +25,15 @@ npm install serverful
 
 ### How to use
 
+#### Use it in your app
+Load module and start a server
+```javascript
+const Serverful = require('serverful')
+
+const server = new Serverful()
+server.start()
+```
+
 #### Available environment variables
 Variable | Description | Required | Default value
 :---:|:---:|:---:|:---:
@@ -35,15 +44,6 @@ API_KEYS | The secret keys that should be used when securing endpoints | false |
 ENVIRONMENT | The environment the app is running on | false | `undefined`
 ROLLBAR_API_KEY | The server API key used to talk with Rollbar | false | `undefined`
 SO_TIMEOUT | Node socket timeout. Defaults to 2 minutes. Set to false to disable socket timeouts. | false | `undefined`
-
-#### Use it in your app
-Load module and start a server
-```javascript
-const Serverful = require('serverful')
-
-const server = new Serverful()
-server.start()
-```
 
 ### Used by
 * [get-me-a-date](https://github.com/hfreire/get-me-a-date) - :heart_eyes: Help me get a :cupid: date tonight :first_quarter_moon_with_face:
