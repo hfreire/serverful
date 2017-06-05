@@ -31,8 +31,8 @@ describe('Serverful', () => {
   afterEach(() => td.reset())
 
   describe('when constructing a server', () => {
-    const pingRouteConfig = {}
-    const healthcheckRouteConfig = {}
+    const pingRouteConfig = 'my-ping-route-config'
+    const healthcheckRouteConfig = 'my-ping-healthcheck-config'
 
     beforeEach(() => {
       td.replace('hapi', { 'Server': function () { return http } })
@@ -67,12 +67,16 @@ describe('Serverful', () => {
       td.verify(http.on('request-error'), { times: 1, ignoreExtraArgs: true })
     })
 
-    it.skip('should configure route to ping ', () => {
+    it('should configure route to ping', () => {
       td.verify(http.route(pingRouteConfig), { times: 1 })
     })
 
-    it.skip('should configure route to healthcheck ', () => {
+    it('should configure route to healthcheck', () => {
       td.verify(http.route(healthcheckRouteConfig), { times: 1 })
+    })
+
+    it('should add server health check', () => {
+      td.verify(Health.addCheck(), { ignoreExtraArgs: true, times: 1 })
     })
   })
 
@@ -93,6 +97,29 @@ describe('Serverful', () => {
       return subject.start()
         .finally(() => {
           td.verify(http.start(), { times: 1, ignoreExtraArgs: true })
+        })
+    })
+  })
+
+  describe('when starting server and hapi fails to start', () => {
+    const error = new Error('my-error-message')
+
+    beforeEach(() => {
+      td.replace('hapi', { 'Server': function () { return http } })
+      td.when(http.start()).thenCallback()
+
+      td.replace('modern-logger', Logger)
+
+      td.replace('health-checkup', Health)
+
+      const Serverful = require('../src/serverful')
+      subject = new Serverful()
+    })
+
+    it('should reject with error', () => {
+      return subject.start()
+        .catch((_error) => {
+          _error.should.be.equal(error)
         })
     })
   })

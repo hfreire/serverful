@@ -65,28 +65,33 @@ const apiKeyScheme = () => {
   }
 }
 
-const readdirAsync = Promise.promisify(require('fs').readdir)
+const readdirSync = require('fs').readdirSync
 const { join, dirname } = require('path')
 
 const configureRoutes = function () {
-  return Promise.resolve([ __dirname, dirname(require.main.filename) ])
-    .mapSeries((path) => {
-      return readdirAsync(join(path, '/routes'))
-        .mapSeries((entry) => {
-          if (entry === 'route.js' || _.startsWith(entry, '.')) {
-            return
-          }
+  const paths = [ __dirname, dirname(require.main.filename) ]
 
-          try {
-            const module = require(join(path, `/routes/${entry}`))
+  try {
+    _.forEach(paths, (path) => {
+      const routes = readdirSync(join(path, '/routes'))
 
-            this._http.route(module.toRoute())
-          } catch (error) {
-            Logger.error(error)
-          }
-        })
-        .catch(() => {})
+      _.forEach(routes, (route) => {
+        if (route === 'route.js' || _.startsWith(route, '.')) {
+          return
+        }
+
+        try {
+          const module = require(join(path, `/routes/${route.substring(0, route.length - 3)}`))
+
+          this._http.route(module.toRoute())
+        } catch (error) {
+          Logger.error(error)
+        }
+      })
     })
+  } catch (error) {
+    Logger.error(error)
+  }
 }
 
 class Serverful {
