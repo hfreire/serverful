@@ -33,6 +33,12 @@ class Route {
 
   pre () {}
 
+  state () {
+    return {
+      parse: false
+    }
+  }
+
   toRoute () {
     return {
       method: this.method,
@@ -47,7 +53,8 @@ class Route {
         notes: this.notes,
         validate: this.validate(),
         cors: this.cors(),
-        pre: this.pre()
+        pre: this.pre(),
+        state: this.state()
       }
     }
   }
