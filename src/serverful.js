@@ -71,27 +71,30 @@ const { join, dirname } = require('path')
 const configureRoutes = function () {
   const paths = [ __dirname, dirname(require.main.filename) ]
 
-  try {
-    _.forEach(paths, (path) => {
-      const routes = readdirSync(join(path, '/routes'))
+  _.forEach(paths, (path) => {
+    let routes
+    try {
+      routes = readdirSync(join(path, '/routes'))
+    } catch (error) {
+      return
+    }
 
-      _.forEach(routes, (route) => {
-        if (route === 'route.js' || _.startsWith(route, '.')) {
-          return
-        }
+    _.forEach(routes, (route) => {
+      if (route === 'route.js' || _.startsWith(route, '.')) {
+        return
+      }
 
-        try {
-          const module = require(join(path, `/routes/${route.substring(0, route.length - 3)}`))
+      const _route = _.endsWith(route, '.js') ? route.substring(0, route.length - 3) : route
 
-          this._http.route(module.toRoute())
-        } catch (error) {
-          Logger.error(error)
-        }
-      })
+      try {
+        const module = require(join(path, `/routes/${_route}`))
+
+        this._http.route(module.toRoute())
+      } catch (error) {
+        Logger.error(error)
+      }
     })
-  } catch (error) {
-    Logger.error(error)
-  }
+  })
 }
 
 class Serverful {
