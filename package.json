@@ -16,7 +16,7 @@
   "dependencies": {
     "bluebird": "3.5.0",
     "boom": "5.1.0",
-    "hapi": "16.4.2",
+    "hapi": "16.4.3",
     "hapi-pagination": "1.20.0",
     "hapi-swagger": "7.7.0",
     "inert": "4.2.0",
