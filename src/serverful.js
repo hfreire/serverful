@@ -65,36 +65,57 @@ const apiKeyScheme = () => {
   }
 }
 
-const readdirSync = require('fs').readdirSync
+const Route = require('./routes/Route')
+
+const { readdirSync, lstatSync } = require('fs')
 const { join, dirname } = require('path')
 
 const configureRoutes = function () {
-  const paths = [ __dirname, dirname(require.main.filename) ]
+  const paths = [ join(__dirname, '/routes'), join(dirname(require.main.filename), '/routes') ]
 
-  _.forEach(paths, (path) => {
-    let routes
+  const loadPathRoutes = (path) => {
+    let entries
     try {
-      routes = readdirSync(join(path, '/routes'))
+      entries = readdirSync(path)
     } catch (error) {
       return
     }
 
-    _.forEach(routes, (route) => {
-      if (route === 'route.js' || _.startsWith(route, '.')) {
+    _.forEach(entries, (entry) => {
+      if (entry === 'route.js' || _.startsWith(entry, '.')) {
         return
       }
 
-      const _route = _.endsWith(route, '.js') ? route.substring(0, route.length - 3) : route
+      let stat
+      try {
+        stat = lstatSync(join(path, `/${entry}`))
+      } catch (error) {
+        return
+      }
+
+      if (stat.isDirectory()) {
+        loadPathRoutes(join(path, `/${entry}`))
+
+        return
+      }
+
+      const _entry = _.endsWith(entry, '.js') ? entry.substring(0, entry.length - 3) : entry
 
       try {
-        const module = require(join(path, `/routes/${_route}`))
+        const module = require(join(path, `/${_entry}`))
+
+        if (!(module instanceof Route)) {
+          return
+        }
 
         this._http.route(module.toRoute())
       } catch (error) {
         Logger.error(error)
       }
     })
-  })
+  }
+
+  _.forEach(paths, (path) => loadPathRoutes(path))
 }
 
 class Serverful {

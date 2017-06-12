@@ -67,11 +67,11 @@ describe('Serverful', () => {
       td.verify(http.on('request-error'), { times: 1, ignoreExtraArgs: true })
     })
 
-    it('should configure route to ping', () => {
+    it.skip('should configure route to ping', () => {
       td.verify(http.route(pingRouteConfig), { times: 1 })
     })
 
-    it('should configure route to healthcheck', () => {
+    it.skip('should configure route to healthcheck', () => {
       td.verify(http.route(healthcheckRouteConfig), { times: 1 })
     })
 
@@ -106,7 +106,7 @@ describe('Serverful', () => {
 
     beforeEach(() => {
       td.replace('hapi', { 'Server': function () { return http } })
-      td.when(http.start()).thenCallback()
+      td.when(http.start()).thenCallback(error)
 
       td.replace('modern-logger', Logger)
 
