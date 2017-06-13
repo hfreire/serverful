@@ -65,7 +65,7 @@ const apiKeyScheme = () => {
   }
 }
 
-const Route = require('./routes/Route')
+const Route = require('./routes/route')
 
 const { readdirSync, lstatSync } = require('fs')
 const { join, dirname } = require('path')
