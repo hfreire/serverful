@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const Route = require('./route')
+const Route = require('../route')
 
 const Joi = require('joi')
 
@@ -16,6 +16,10 @@ class Ping extends Route {
 
   handler (request, reply) {
     return reply(null, { answer: 'pong' })
+  }
+
+  tags () {
+    return [ 'api', 'utils' ]
   }
 
   auth () {

@@ -29,7 +29,7 @@ describe('Healthcheck', () => {
       td.replace('health-checkup', Health)
       td.when(Health.checkup()).thenResolve(status)
 
-      subject = require('../../src/routes/healthcheck')
+      subject = require('../../../src/routes/utils/healthcheck')
     })
 
     it('should return server status', () => {
@@ -67,7 +67,7 @@ describe('Healthcheck', () => {
       td.replace('health-checkup', Health)
       td.when(Health.checkup()).thenResolve(status)
 
-      subject = require('../../src/routes/healthcheck')
+      subject = require('../../../src/routes/utils/healthcheck')
     })
 
     it('should return server status', () => {
@@ -95,7 +95,7 @@ describe('Healthcheck', () => {
     beforeEach(() => {
       td.replace('health-checkup', Health)
 
-      subject = require('../../src/routes/healthcheck')
+      subject = require('../../../src/routes/utils/healthcheck')
     })
 
     it('should not require authenticate', () => {

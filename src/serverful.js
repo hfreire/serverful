@@ -132,6 +132,12 @@ class Serverful {
         return
       }
 
+      let level = 'info'
+
+      if (_.includes(route.settings.tags, 'utils')) {
+        level = 'debug'
+      }
+
       const remoteAddress = info.remoteAddress
       const path = url.path
       const statusCode = response.statusCode
@@ -139,7 +145,7 @@ class Serverful {
       const userAgent = headers[ 'user-agent' ] || '-'
       const apiKey = headers[ 'x-api-key' ] || query.key || '-'
 
-      Logger.info(`${remoteAddress} - "${method.toUpperCase()} ${path}" ${statusCode} ${duration} "${userAgent}" "${apiKey}"`)
+      Logger[ level ](`${remoteAddress} - "${method.toUpperCase()} ${path}" ${statusCode} ${duration} "${userAgent}" "${apiKey}"`)
     })
     this._http.on('request-error', (request, error) => Logger.error(error))
 

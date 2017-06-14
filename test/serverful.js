@@ -41,10 +41,10 @@ describe('Serverful', () => {
 
       td.replace('health-checkup', Health)
 
-      td.replace('../src/routes/ping', pingRoute)
+      td.replace('../src/routes/utils/ping', pingRoute)
       td.when(pingRoute.toRoute()).thenReturn(pingRouteConfig)
 
-      td.replace('../src/routes/healthcheck', healthcheckRoute)
+      td.replace('../src/routes/utils/healthcheck', healthcheckRoute)
       td.when(healthcheckRoute.toRoute()).thenReturn(healthcheckRouteConfig)
 
       const Serverful = require('../src/serverful')

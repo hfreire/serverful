@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const Route = require('./route')
+const Route = require('../route')
 
 const _ = require('lodash')
 
@@ -23,6 +23,10 @@ class Healthcheck extends Route {
 
         return reply(null, { status }).code(statusCode)
       })
+  }
+
+  tags () {
+    return [ 'api', 'utils' ]
   }
 
   auth () {

@@ -17,7 +17,7 @@ describe('Ping', () => {
     beforeEach(() => {
       reply = td.function()
 
-      subject = require('../../src/routes/ping')
+      subject = require('../../../src/routes/utils/ping')
     })
 
     it('should return a pong', () => {
@@ -35,7 +35,7 @@ describe('Ping', () => {
 
   describe('when configuring authentication', () => {
     beforeEach(() => {
-      subject = require('../../src/routes/ping')
+      subject = require('../../../src/routes/utils/ping')
     })
 
     it('should not require authenticate', () => {
@@ -47,7 +47,7 @@ describe('Ping', () => {
 
   describe('when configuring plugins', () => {
     beforeEach(() => {
-      subject = require('../../src/routes/ping')
+      subject = require('../../../src/routes/utils/ping')
     })
 
     it('should configure hapi-swagger plugin', () => {
