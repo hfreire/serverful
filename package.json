@@ -20,7 +20,7 @@
     "hapi-pagination": "1.20.0",
     "hapi-swagger": "7.7.0",
     "inert": "4.2.0",
-    "joi": "10.5.2",
+    "joi": "10.6.0",
     "lodash": "4.17.4",
     "vision": "4.1.1"
   },
