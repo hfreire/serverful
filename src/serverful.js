@@ -37,6 +37,11 @@ const HapiSwagger = {
 const HapiPagination = {
   register: require('hapi-pagination'),
   options: {
+    query: {
+      page: {
+        default: 0
+      }
+    },
     routes: {
       include: [] // Emptying include list will disable pagination
     }
