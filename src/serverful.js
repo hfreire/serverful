@@ -38,7 +38,7 @@ const HapiPagination = {
   register: require('hapi-pagination'),
   options: {
     routes: {
-      include: []  // Emptying include list will disable pagination
+      include: [] // Emptying include list will disable pagination
     }
   }
 }
