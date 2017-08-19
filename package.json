@@ -18,7 +18,7 @@
     "boom": "5.2.0",
     "hapi": "16.5.2",
     "hapi-pagination": "1.22.0",
-    "hapi-swagger": "7.7.0",
+    "hapi-swagger": "7.7.1",
     "inert": "4.2.1",
     "joi": "10.6.0",
     "lodash": "4.17.4",
