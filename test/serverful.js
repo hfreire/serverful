@@ -7,6 +7,7 @@
 
 describe('Serverful', () => {
   let subject
+  let fs
   let http
   let Logger
   let Health
@@ -14,6 +15,8 @@ describe('Serverful', () => {
   let healthcheckRoute
 
   before(() => {
+    fs = td.object([ 'readdirSync', 'lstatSync' ])
+
     http = td.object([ 'connection', 'auth', 'on', 'route', 'start', 'stop', 'register' ])
     http.auth.scheme = td.function()
     http.auth.strategy = td.function()
@@ -35,6 +38,9 @@ describe('Serverful', () => {
     const healthcheckRouteConfig = 'my-ping-healthcheck-config'
 
     beforeEach(() => {
+      td.when(fs.readdirSync(), { ignoreExtraArgs: true }).thenReturn([])
+      td.replace('fs', fs)
+
       td.replace('hapi', { 'Server': function () { return http } })
 
       td.replace('modern-logger', Logger)
