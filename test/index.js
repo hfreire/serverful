@@ -5,14 +5,25 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const Serverful = require('../src/serverful')
-const Route = require('../src/routes/route')
-
 describe('Module', () => {
   let subject
+  let Serverful
+  let Route
+
+  before(() => {
+    Serverful = td.constructor()
+
+    Route = td.constructor()
+  })
+
+  afterEach(() => td.reset())
 
   describe('when loading', () => {
     beforeEach(() => {
+      td.replace('../src/serverful', Serverful)
+
+      td.replace('../src/routes/route', Route)
+
       subject = require('../src/index')
     })
 
