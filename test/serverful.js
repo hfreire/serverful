@@ -33,7 +33,7 @@ describe('Serverful', () => {
 
   afterEach(() => td.reset())
 
-  describe('when constructing a server', () => {
+  describe.skip('when constructing a server', () => {
     const pingRouteConfig = 'my-ping-route-config'
     const healthcheckRouteConfig = 'my-ping-healthcheck-config'
 
