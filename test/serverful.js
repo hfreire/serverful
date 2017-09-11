@@ -9,6 +9,11 @@ describe('Serverful', () => {
   let subject
   let fs
   let http
+  let Boom
+  let Inert
+  let Vision
+  let HapiSwagger
+  let HapiPagination
   let Logger
   let Health
   let pingRoute
@@ -23,6 +28,16 @@ describe('Serverful', () => {
     http.auth.default = td.function()
     http.app = td.object([])
 
+    Boom = td.object([])
+
+    Inert = td.object([])
+
+    Vision = td.object([])
+
+    HapiSwagger = td.object([])
+
+    HapiPagination = td.object([])
+
     Logger = td.object([ 'info', 'error' ])
 
     Health = td.object([ 'addCheck' ])
@@ -33,7 +48,7 @@ describe('Serverful', () => {
 
   afterEach(() => td.reset())
 
-  describe.skip('when constructing a server', () => {
+  describe('when constructing a server', () => {
     const pingRouteConfig = 'my-ping-route-config'
     const healthcheckRouteConfig = 'my-ping-healthcheck-config'
 
@@ -42,6 +57,16 @@ describe('Serverful', () => {
       td.replace('fs', fs)
 
       td.replace('hapi', { 'Server': function () { return http } })
+
+      td.replace('boom', Boom)
+
+      td.replace('inert', Inert)
+
+      td.replace('vision', Vision)
+
+      td.replace('hapi-swagger', HapiSwagger)
+
+      td.replace('hapi-pagination', HapiPagination)
 
       td.replace('modern-logger', Logger)
 
