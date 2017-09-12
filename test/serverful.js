@@ -7,18 +7,36 @@
 
 describe('Serverful', () => {
   let subject
+  let fs
   let http
+  let Boom
+  let Inert
+  let Vision
+  let HapiSwagger
+  let HapiPagination
   let Logger
   let Health
   let pingRoute
   let healthcheckRoute
 
   before(() => {
+    fs = td.object([ 'readdirSync', 'lstatSync' ])
+
     http = td.object([ 'connection', 'auth', 'on', 'route', 'start', 'stop', 'register' ])
     http.auth.scheme = td.function()
     http.auth.strategy = td.function()
     http.auth.default = td.function()
     http.app = td.object([])
+
+    Boom = td.object([])
+
+    Inert = td.object([])
+
+    Vision = td.object([])
+
+    HapiSwagger = td.object([])
+
+    HapiPagination = td.object([])
 
     Logger = td.object([ 'info', 'error' ])
 
@@ -35,7 +53,20 @@ describe('Serverful', () => {
     const healthcheckRouteConfig = 'my-ping-healthcheck-config'
 
     beforeEach(() => {
+      td.when(fs.readdirSync(), { ignoreExtraArgs: true }).thenReturn([])
+      td.replace('fs', fs)
+
       td.replace('hapi', { 'Server': function () { return http } })
+
+      td.replace('boom', Boom)
+
+      td.replace('inert', Inert)
+
+      td.replace('vision', Vision)
+
+      td.replace('hapi-swagger', HapiSwagger)
+
+      td.replace('hapi-pagination', HapiPagination)
 
       td.replace('modern-logger', Logger)
 
