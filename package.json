@@ -15,7 +15,7 @@
   "homepage": "https://github.com/hfreire/serverful#readme",
   "dependencies": {
     "bluebird": "3.5.0",
-    "boom": "5.2.0",
+    "boom": "6.0.0",
     "hapi": "16.6.1",
     "hapi-pagination": "1.22.0",
     "hapi-swagger": "7.8.1",
