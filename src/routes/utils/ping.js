@@ -5,13 +5,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+const PING_PATH = process.env.PING_PATH || '/ping'
+
 const Route = require('../route')
 
 const Joi = require('joi')
 
 class Ping extends Route {
-  constructor (method = 'GET', path = '/ping', description = 'Ping service', notes = 'Returns a pong for every ping') {
-    super(method, path, description, notes)
+  constructor () {
+    super('GET', PING_PATH, 'Ping service', 'Returns a pong for every ping')
   }
 
   handler (request, reply) {
