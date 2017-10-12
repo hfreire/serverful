@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const HEALTHCHECK_PATH = process.env.PING_PATH || '/healthcheck'
+const HEALTHCHECK_PATH = process.env.HEALTHCHECK_PATH || '/healthcheck'
 
 const Route = require('../route')
 
