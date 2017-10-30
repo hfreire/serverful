@@ -123,12 +123,35 @@ const configureRoutes = function () {
   _.forEach(paths, (path) => loadPathRoutes(path))
 }
 
-class Serverful {
-  constructor (options = { port: PORT }) {
-    const connections = { routes: { timeout: { server: false, socket: SO_TIMEOUT } } }
-    this._http = Promise.promisifyAll(new Server({ debug: false, load: { sampleInterval: 60000 }, connections }))
+const defaultOptions = {
+  hapi: {
+    server: {
+      debug: false,
+      load: {
+        sampleInterval: 60000
+      },
+      connections: {
+        routes: {
+          timeout: {
+            server: false,
+            socket: SO_TIMEOUT
+          }
+        }
+      }
+    },
+    connection: {
+      port: PORT
+    }
+  }
+}
 
-    this._http.connection(options)
+class Serverful {
+  constructor (options = {}) {
+    this._options = _.defaultsDeep(options, defaultOptions)
+
+    this._http = Promise.promisifyAll(new Server(_.get(this._options, 'hapi.server')))
+
+    this._http.connection(_.get(this._options, 'hapi.connection'))
 
     this._http.on('start', () => Logger.info(`Started :rocket: HTTP server on port ${PORT}`))
     this._http.on('stop', () => Logger.info('Stopped HTTP server'))
