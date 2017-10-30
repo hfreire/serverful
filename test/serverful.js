@@ -8,7 +8,7 @@
 describe('Serverful', () => {
   let subject
   let fs
-  let http
+  let Hapi
   let Boom
   let Inert
   let Vision
@@ -16,17 +16,20 @@ describe('Serverful', () => {
   let HapiPagination
   let Logger
   let Health
+  let Route
   let pingRoute
   let healthcheckRoute
 
   before(() => {
     fs = td.object([ 'readdirSync', 'lstatSync' ])
 
-    http = td.object([ 'connection', 'auth', 'on', 'route', 'start', 'stop', 'register' ])
-    http.auth.scheme = td.function()
-    http.auth.strategy = td.function()
-    http.auth.default = td.function()
-    http.app = td.object([])
+    Hapi = td.object([])
+    Hapi.Server = td.constructor([ 'connection', 'auth', 'on', 'route', 'start', 'stop', 'register' ])
+
+    Hapi.Server.prototype.auth.scheme = td.function()
+    Hapi.Server.prototype.auth.strategy = td.function()
+    Hapi.Server.prototype.auth.default = td.function()
+    Hapi.Server.prototype.app = td.object([])
 
     Boom = td.object([])
 
@@ -42,6 +45,8 @@ describe('Serverful', () => {
 
     Health = td.object([ 'addCheck' ])
 
+    Route = td.constructor([])
+
     pingRoute = td.object([ 'toRoute' ])
     healthcheckRoute = td.object([ 'toRoute' ])
   })
@@ -56,7 +61,7 @@ describe('Serverful', () => {
       td.when(fs.readdirSync(), { ignoreExtraArgs: true }).thenReturn([])
       td.replace('fs', fs)
 
-      td.replace('hapi', { 'Server': function () { return http } })
+      td.replace('hapi', Hapi)
 
       td.replace('boom', Boom)
 
@@ -72,38 +77,40 @@ describe('Serverful', () => {
 
       td.replace('health-checkup', Health)
 
-      td.replace('../src/routes/utils/ping', pingRoute)
-      td.when(pingRoute.toRoute()).thenReturn(pingRouteConfig)
+      td.replace('../src/route/route', Route)
 
-      td.replace('../src/routes/utils/healthcheck', healthcheckRoute)
+      td.when(pingRoute.toRoute()).thenReturn(pingRouteConfig)
+      td.replace('../src/routes/utils/ping', pingRoute)
+
       td.when(healthcheckRoute.toRoute()).thenReturn(healthcheckRouteConfig)
+      td.replace('../src/routes/utils/healthcheck', healthcheckRoute)
 
       const Serverful = require('../src/serverful')
       subject = new Serverful()
     })
 
     it('should listen on hapi server start event', () => {
-      td.verify(http.on('start'), { times: 1, ignoreExtraArgs: true })
+      td.verify(Hapi.Server.prototype.on('start'), { times: 1, ignoreExtraArgs: true })
     })
 
     it('should listen on hapi server stop event', () => {
-      td.verify(http.on('stop'), { times: 1, ignoreExtraArgs: true })
+      td.verify(Hapi.Server.prototype.on('stop'), { times: 1, ignoreExtraArgs: true })
     })
 
     it('should listen on hapi server response event', () => {
-      td.verify(http.on('response'), { times: 1, ignoreExtraArgs: true })
+      td.verify(Hapi.Server.prototype.on('response'), { times: 1, ignoreExtraArgs: true })
     })
 
     it('should listen on hapi server request-error', () => {
-      td.verify(http.on('request-error'), { times: 1, ignoreExtraArgs: true })
+      td.verify(Hapi.Server.prototype.on('request-error'), { times: 1, ignoreExtraArgs: true })
     })
 
     it.skip('should configure route to ping', () => {
-      td.verify(http.route(pingRouteConfig), { times: 1 })
+      td.verify(Hapi.Server.prototype.route(pingRouteConfig), { times: 1 })
     })
 
     it.skip('should configure route to healthcheck', () => {
-      td.verify(http.route(healthcheckRouteConfig), { times: 1 })
+      td.verify(Hapi.Server.prototype.route(healthcheckRouteConfig), { times: 1 })
     })
 
     it('should add server health check', () => {
@@ -111,14 +118,30 @@ describe('Serverful', () => {
     })
   })
 
-  describe('when starting server', () => {
+  describe('when starting a server', () => {
     beforeEach(() => {
-      td.replace('hapi', { 'Server': function () { return http } })
-      td.when(http.start()).thenCallback()
+      td.when(Hapi.Server.prototype.start()).thenCallback()
+      td.replace('hapi', Hapi)
+
+      td.replace('boom', Boom)
+
+      td.replace('inert', Inert)
+
+      td.replace('vision', Vision)
+
+      td.replace('hapi-swagger', HapiSwagger)
+
+      td.replace('hapi-pagination', HapiPagination)
 
       td.replace('modern-logger', Logger)
 
       td.replace('health-checkup', Health)
+
+      td.replace('../src/route/route', Route)
+
+      td.replace('../src/routes/utils/ping', pingRoute)
+
+      td.replace('../src/routes/utils/healthcheck', healthcheckRoute)
 
       const Serverful = require('../src/serverful')
       subject = new Serverful()
@@ -127,21 +150,75 @@ describe('Serverful', () => {
     it('should invoke hapi server start', () => {
       return subject.start()
         .finally(() => {
-          td.verify(http.start(), { times: 1, ignoreExtraArgs: true })
+          td.verify(Hapi.Server.prototype.start(), { times: 1, ignoreExtraArgs: true })
         })
     })
   })
 
-  describe('when starting server and hapi fails to start', () => {
-    const error = new Error('my-error-message')
-
+  describe('when starting a server that is already running', () => {
     beforeEach(() => {
-      td.replace('hapi', { 'Server': function () { return http } })
-      td.when(http.start()).thenCallback(error)
+      td.when(Hapi.Server.prototype.start()).thenCallback()
+      td.replace('hapi', Hapi)
+
+      td.replace('boom', Boom)
+
+      td.replace('inert', Inert)
+
+      td.replace('vision', Vision)
+
+      td.replace('hapi-swagger', HapiSwagger)
+
+      td.replace('hapi-pagination', HapiPagination)
 
       td.replace('modern-logger', Logger)
 
       td.replace('health-checkup', Health)
+
+      td.replace('../src/route/route', Route)
+
+      td.replace('../src/routes/utils/ping', pingRoute)
+
+      td.replace('../src/routes/utils/healthcheck', healthcheckRoute)
+
+      const Serverful = require('../src/serverful')
+      subject = new Serverful()
+      return subject.start()
+    })
+
+    it('should not invoke hapi server start', () => {
+      return subject.start()
+        .finally(() => {
+          td.verify(Hapi.Server.prototype.start(), { times: 0 })
+        })
+    })
+  })
+
+  describe('when starting a server and hapi fails to start', () => {
+    const error = new Error('my-error-message')
+
+    beforeEach(() => {
+      td.when(Hapi.Server.prototype.start()).thenCallback(error)
+      td.replace('hapi', Hapi)
+
+      td.replace('boom', Boom)
+
+      td.replace('inert', Inert)
+
+      td.replace('vision', Vision)
+
+      td.replace('hapi-swagger', HapiSwagger)
+
+      td.replace('hapi-pagination', HapiPagination)
+
+      td.replace('modern-logger', Logger)
+
+      td.replace('health-checkup', Health)
+
+      td.replace('../src/route/route', Route)
+
+      td.replace('../src/routes/utils/ping', pingRoute)
+
+      td.replace('../src/routes/utils/healthcheck', healthcheckRoute)
 
       const Serverful = require('../src/serverful')
       subject = new Serverful()
@@ -150,20 +227,36 @@ describe('Serverful', () => {
     it('should reject with error', () => {
       return subject.start()
         .catch((_error) => {
-          _error.should.be.equal(error)
+          _error.should.have.property('message', error.message)
         })
     })
   })
 
   describe('when stopping a running server', () => {
     beforeEach(() => {
-      td.replace('hapi', { 'Server': function () { return http } })
-      td.when(http.start()).thenCallback()
-      td.when(http.stop()).thenCallback()
+      td.when(Hapi.Server.prototype.start()).thenCallback()
+      td.when(Hapi.Server.prototype.stop()).thenCallback()
+      td.replace('hapi', Hapi)
+
+      td.replace('boom', Boom)
+
+      td.replace('inert', Inert)
+
+      td.replace('vision', Vision)
+
+      td.replace('hapi-swagger', HapiSwagger)
+
+      td.replace('hapi-pagination', HapiPagination)
 
       td.replace('modern-logger', Logger)
 
       td.replace('health-checkup', Health)
+
+      td.replace('../src/route/route', Route)
+
+      td.replace('../src/routes/utils/ping', pingRoute)
+
+      td.replace('../src/routes/utils/healthcheck', healthcheckRoute)
 
       const Serverful = require('../src/serverful')
       subject = new Serverful()
@@ -173,18 +266,34 @@ describe('Serverful', () => {
     it('should invoke hapi server stop', () => {
       return subject.stop()
         .finally(() => {
-          td.verify(http.stop(), { times: 1, ignoreExtraArgs: true })
+          td.verify(Hapi.Server.prototype.stop(), { times: 1, ignoreExtraArgs: true })
         })
     })
   })
 
   describe('when stopping a non-running server', () => {
     beforeEach(() => {
-      td.replace('hapi', { 'Server': function () { return http } })
+      td.replace('hapi', Hapi)
+
+      td.replace('boom', Boom)
+
+      td.replace('inert', Inert)
+
+      td.replace('vision', Vision)
+
+      td.replace('hapi-swagger', HapiSwagger)
+
+      td.replace('hapi-pagination', HapiPagination)
 
       td.replace('modern-logger', Logger)
 
       td.replace('health-checkup', Health)
+
+      td.replace('../src/route/route', Route)
+
+      td.replace('../src/routes/utils/ping', pingRoute)
+
+      td.replace('../src/routes/utils/healthcheck', healthcheckRoute)
 
       const Serverful = require('../src/serverful')
       subject = new Serverful()
@@ -199,13 +308,29 @@ describe('Serverful', () => {
     const error = new Error()
 
     beforeEach(() => {
-      td.replace('hapi', { 'Server': function () { return http } })
-      td.when(http.start()).thenCallback()
-      td.when(http.stop()).thenCallback(error)
+      td.when(Hapi.Server.prototype.start()).thenCallback()
+      td.when(Hapi.Server.prototype.stop()).thenCallback(error)
+      td.replace('hapi', Hapi)
+
+      td.replace('boom', Boom)
+
+      td.replace('inert', Inert)
+
+      td.replace('vision', Vision)
+
+      td.replace('hapi-swagger', HapiSwagger)
+
+      td.replace('hapi-pagination', HapiPagination)
 
       td.replace('modern-logger', Logger)
 
       td.replace('health-checkup', Health)
+
+      td.replace('../src/route/route', Route)
+
+      td.replace('../src/routes/utils/ping', pingRoute)
+
+      td.replace('../src/routes/utils/healthcheck', healthcheckRoute)
 
       const Serverful = require('../src/serverful')
       subject = new Serverful()
@@ -215,7 +340,7 @@ describe('Serverful', () => {
     it('should reject with error', () => {
       return subject.stop()
         .catch((_error) => {
-          _error.should.be.equal(error)
+          _error.should.have.property('message', error.message)
         })
     })
   })

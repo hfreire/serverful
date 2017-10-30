@@ -18,7 +18,7 @@ const Logger = require('modern-logger')
 
 const Health = require('health-checkup')
 
-const Hapi = require('hapi')
+const { Server } = require('hapi')
 const Boom = require('boom')
 
 const Inert = require('inert')
@@ -126,7 +126,7 @@ const configureRoutes = function () {
 class Serverful {
   constructor (options = { port: PORT }) {
     const connections = { routes: { timeout: { server: false, socket: SO_TIMEOUT } } }
-    this._http = new Hapi.Server({ debug: false, load: { sampleInterval: 60000 }, connections })
+    this._http = Promise.promisifyAll(new Server({ debug: false, load: { sampleInterval: 60000 }, connections }))
 
     this._http.connection(options)
 
@@ -170,38 +170,24 @@ class Serverful {
   }
 
   start () {
-    return new Promise((resolve, reject) => {
-      if (this._http.app.isRunning) {
-        return resolve()
+    return Promise.try(() => {
+      if (this._isRunning) {
+        return
       }
 
-      this._http.start((error) => {
-        if (error) {
-          return reject(error)
-        }
-
-        this._http.app.isRunning = true
-
-        resolve()
-      })
+      return this._http.startAsync()
+        .then(() => { this._isRunning = true })
     })
   }
 
   stop () {
-    return new Promise((resolve, reject) => {
-      if (!this._http.app.isRunning) {
-        return resolve()
+    return Promise.try(() => {
+      if (!this._isRunning) {
+        return
       }
 
-      this._http.stop((error) => {
-        delete this._http.app.isRunning
-
-        if (error) {
-          return reject(error)
-        }
-
-        resolve()
-      })
+      return this._http.stopAsync()
+        .then(() => { delete this._isRunning })
     })
   }
 }
