@@ -162,12 +162,10 @@ class Serverful {
 
     configureRoutes.bind(this)()
 
-    Health.addCheck('server', () => new Promise((resolve, reject) => {
+    Health.addCheck('server', () => Promise.try(() => {
       if (!this._http.load) {
-        return reject(new Error('Unable to read server load metrics'))
+        throw new Error('Unable to read server load metrics')
       }
-
-      resolve()
     }))
   }
 
