@@ -22,7 +22,7 @@
     "inert": "4.2.1",
     "joi": "13.0.1",
     "lodash": "4.17.4",
-    "vision": "4.1.1"
+    "vision": "5.1.0"
   },
   "peerDependencies": {
     "health-checkup": ">=1.0.8",
