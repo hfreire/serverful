@@ -18,7 +18,7 @@ const Logger = require('modern-logger')
 
 const Health = require('health-checkup')
 
-const Hapi = require('hapi')
+const { Server } = require('hapi')
 const Boom = require('boom')
 
 const Inert = require('inert')
@@ -123,12 +123,35 @@ const configureRoutes = function () {
   _.forEach(paths, (path) => loadPathRoutes(path))
 }
 
-class Serverful {
-  constructor (options = { port: PORT }) {
-    const connections = { routes: { timeout: { server: false, socket: SO_TIMEOUT } } }
-    this._http = new Hapi.Server({ debug: false, load: { sampleInterval: 60000 }, connections })
+const defaultOptions = {
+  hapi: {
+    server: {
+      debug: false,
+      load: {
+        sampleInterval: 60000
+      },
+      connections: {
+        routes: {
+          timeout: {
+            server: false,
+            socket: SO_TIMEOUT
+          }
+        }
+      }
+    },
+    connection: {
+      port: PORT
+    }
+  }
+}
 
-    this._http.connection(options)
+class Serverful {
+  constructor (options = {}) {
+    this._options = _.defaultsDeep(options, defaultOptions)
+
+    this._http = Promise.promisifyAll(new Server(_.get(this._options, 'hapi.server')))
+
+    this._http.connection(_.get(this._options, 'hapi.connection'))
 
     this._http.on('start', () => Logger.info(`Started :rocket: HTTP server on port ${PORT}`))
     this._http.on('stop', () => Logger.info('Stopped HTTP server'))
@@ -162,48 +185,32 @@ class Serverful {
 
     configureRoutes.bind(this)()
 
-    Health.addCheck('server', () => new Promise((resolve, reject) => {
+    Health.addCheck('server', () => Promise.try(() => {
       if (!this._http.load) {
-        return reject(new Error('Unable to read server load metrics'))
+        throw new Error('Unable to read server load metrics')
       }
-
-      resolve()
     }))
   }
 
   start () {
-    return new Promise((resolve, reject) => {
-      if (this._http.app.isRunning) {
-        return resolve()
+    return Promise.try(() => {
+      if (this._isRunning) {
+        return
       }
 
-      this._http.start((error) => {
-        if (error) {
-          return reject(error)
-        }
-
-        this._http.app.isRunning = true
-
-        resolve()
-      })
+      return this._http.startAsync()
+        .then(() => { this._isRunning = true })
     })
   }
 
   stop () {
-    return new Promise((resolve, reject) => {
-      if (!this._http.app.isRunning) {
-        return resolve()
+    return Promise.try(() => {
+      if (!this._isRunning) {
+        return
       }
 
-      this._http.stop((error) => {
-        delete this._http.app.isRunning
-
-        if (error) {
-          return reject(error)
-        }
-
-        resolve()
-      })
+      return this._http.stopAsync()
+        .then(() => { delete this._isRunning })
     })
   }
 }

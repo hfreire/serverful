@@ -15,12 +15,12 @@
   "homepage": "https://github.com/hfreire/serverful#readme",
   "dependencies": {
     "bluebird": "3.5.1",
-    "boom": "6.0.0",
-    "hapi": "16.6.1",
+    "boom": "7.1.1",
+    "hapi": "17.0.0",
     "hapi-pagination": "1.22.0",
-    "hapi-swagger": "7.8.1",
+    "hapi-swagger": "8.0.0",
     "inert": "4.2.1",
-    "joi": "11.0.0",
+    "joi": "13.0.1",
     "lodash": "4.17.4",
     "vision": "4.1.1"
   },
@@ -30,37 +30,29 @@
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
-    "babel-preset-es2015": "6.24.1",
+    "babel-preset-env": "1.6.1",
     "chai": "4.1.2",
     "chai-as-promised": "7.1.1",
     "coveralls": "2.13.3",
-    "eslint": "4.9.0",
+    "eslint": "4.10.0",
     "eslint-config-hfreire": "1.0.8",
     "eslint-plugin-import": "2.8.0",
     "eslint-plugin-json": "1.2.0",
     "eslint-plugin-mocha": "4.11.0",
-    "eslint-plugin-node": "5.2.0",
+    "eslint-plugin-node": "5.2.1",
     "eslint-plugin-promise": "3.6.0",
     "eslint-plugin-standard": "3.0.1",
     "eslint-plugin-unicorn": "2.1.2",
     "istanbul": "0.4.5",
     "mocha": "4.0.1",
-    "semantic-release": "7.0.2",
-    "pre-git": "3.15.3",
+    "pre-git": "3.16.0",
+    "semantic-release": "9.1.0",
     "testdouble": "3.2.6"
-  },
-  "greenkeeper": {
-    "ignore": [
-      "semantic-release"
-    ]
   },
   "config": {
     "pre-git": {
       "commit-msg": "conventional"
     }
-  },
-  "release": {
-    "analyzeCommits": "simple-commit-message"
   },
   "scripts": {
     "clean": "rm -rf lib coverage",
@@ -70,7 +62,7 @@
     "compile": "npm run clean && mkdir -p lib && ./node_modules/.bin/babel src/ -d lib",
     "prepublish": "npm run compile",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
-    "semantic-release": "./node_modules/.bin/semantic-release pre && npm publish && node_modules/.bin/semantic-release post",
+    "semantic-release": "./node_modules/.bin/semantic-release",
     "commit": "./node_modules/.bin/commit-wizard"
   }
 }
