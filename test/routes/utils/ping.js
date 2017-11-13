@@ -7,6 +7,15 @@
 
 describe('Ping', () => {
   let subject
+  let serverful
+  let Joi
+
+  before(() => {
+    serverful = td.object([])
+    serverful.Route = td.constructor([])
+
+    Joi = td.object([ 'object', 'label' ])
+  })
 
   afterEach(() => td.reset())
 
@@ -14,8 +23,14 @@ describe('Ping', () => {
     const request = undefined
     let reply
 
-    beforeEach(() => {
+    before(() => {
       reply = td.function()
+    })
+
+    beforeEach(() => {
+      td.replace('serverful', serverful)
+
+      td.replace('joi', Joi)
 
       subject = require('../../../src/routes/utils/ping')
     })
@@ -35,6 +50,10 @@ describe('Ping', () => {
 
   describe('when configuring authentication', () => {
     beforeEach(() => {
+      td.replace('serverful', serverful)
+
+      td.replace('joi', Joi)
+
       subject = require('../../../src/routes/utils/ping')
     })
 
@@ -47,6 +66,11 @@ describe('Ping', () => {
 
   describe('when configuring plugins', () => {
     beforeEach(() => {
+      td.replace('serverful', serverful)
+
+      td.when(Joi.object(), { ignoreExtraArgs: true }).thenReturn(Joi)
+      td.replace('joi', Joi)
+
       subject = require('../../../src/routes/utils/ping')
     })
 

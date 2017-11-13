@@ -7,9 +7,16 @@
 
 describe('Healthcheck', () => {
   let subject
+  let serverful
+  let Joi
   let Health
 
   before(() => {
+    serverful = td.object([])
+    serverful.Route = td.constructor([])
+
+    Joi = td.object([ 'object', 'label' ])
+
     Health = td.object([ 'checkup' ])
   })
 
@@ -21,10 +28,17 @@ describe('Healthcheck', () => {
     let code
     let reply
 
-    beforeEach(() => {
+    before(() => {
       code = td.function()
       reply = td.function()
+    })
+
+    beforeEach(() => {
       td.when(reply(td.matchers.anything()), { ignoreExtraArgs: true }).thenReturn({ code })
+
+      td.replace('serverful', serverful)
+
+      td.replace('joi', Joi)
 
       td.replace('health-checkup', Health)
       td.when(Health.checkup()).thenResolve(status)
@@ -59,10 +73,17 @@ describe('Healthcheck', () => {
     let code
     let reply
 
-    beforeEach(() => {
+    before(() => {
       code = td.function()
       reply = td.function()
+    })
+
+    beforeEach(() => {
       td.when(reply(td.matchers.anything()), { ignoreExtraArgs: true }).thenReturn({ code })
+
+      td.replace('serverful', serverful)
+
+      td.replace('joi', Joi)
 
       td.replace('health-checkup', Health)
       td.when(Health.checkup()).thenResolve(status)
@@ -93,6 +114,10 @@ describe('Healthcheck', () => {
 
   describe('when configuring authentication', () => {
     beforeEach(() => {
+      td.replace('serverful', serverful)
+
+      td.replace('joi', Joi)
+
       td.replace('health-checkup', Health)
 
       subject = require('../../../src/routes/utils/healthcheck')
