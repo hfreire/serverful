@@ -147,7 +147,7 @@ const defaultOptions = {
 
 class Serverful {
   constructor (options = {}) {
-    this._options = _.defaultsDeep(options, defaultOptions)
+    this._options = _.defaultsDeep({}, options, defaultOptions)
 
     this._http = Promise.promisifyAll(new Server(_.get(this._options, 'hapi.server')))
 
