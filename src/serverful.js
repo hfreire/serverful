@@ -116,7 +116,7 @@ const configureRoutes = function () {
         const route = module.toRoute()
 
         if (!_.isEmpty(apiKeys) && _.isUndefined(_.get(route, 'config.auth'))) {
-          route.config.auth = 'default'
+          _.set(route, 'config.auth', 'default')
         }
 
         this._http.route(route)
