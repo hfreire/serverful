@@ -183,9 +183,11 @@ class Serverful {
     })
     this._http.on('request-error', (request, error) => Logger.error(error))
 
-    this._http.auth.scheme('apiKey', apiKeyScheme)
-    this._http.auth.strategy('default', 'apiKey')
-    this._http.auth.default('default')
+    if (!_.isEmpty(apiKeys)) {
+      this._http.auth.scheme('apiKey', apiKeyScheme)
+      this._http.auth.strategy('default', 'apiKey')
+      this._http.auth.default('default')
+    }
 
     this._http.register(plugins)
 
