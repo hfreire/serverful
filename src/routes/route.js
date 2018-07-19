@@ -5,7 +5,7 @@
  * LICENSE.md file in the root directory of this source tree.
  */
 
-const BASE_PATH = process.env.BASE_PATH
+const BASE_PATH = process.env.BASE_PATH || '/'
 
 class Route {
   constructor (method, path, description, notes) {
@@ -15,7 +15,7 @@ class Route {
     this.notes = notes
   }
 
-  static get basePath () {
+  static get BASE_PATH () {
     return BASE_PATH
   }
 
@@ -48,7 +48,7 @@ class Route {
   toRoute () {
     return {
       method: this.method,
-      path: BASE_PATH ? `${BASE_PATH}${this.path}` : this.path,
+      path: BASE_PATH === '/' ? this.path : `${BASE_PATH}${this.path}`,
       config: {
         payload: this.payload(),
         handler: this.handler,
