@@ -30,9 +30,9 @@ const HapiSwagger = {
   options: {
     info: { title: NAME, version: VERSION },
     basePath: Route.BASE_PATH,
-    jsonPath: `${Route.BASE_PATH}swagger.json`,
-    swaggerUIPath: `${Route.BASE_PATH}swaggerui/`,
-    documentationPath: `${Route.BASE_PATH}docs`,
+    jsonPath: `${Route.BASE_PATH === '/' ? '' : Route.BASE_PATH}/swagger.json`,
+    swaggerUIPath: `${Route.BASE_PATH === '/' ? '' : Route.BASE_PATH}/swaggerui/`,
+    documentationPath: `${Route.BASE_PATH === '/' ? '' : Route.BASE_PATH}/docs`,
     tags: [
       { name: 'ping', description: 'Query service status' },
       { name: 'healthcheck', description: 'Query service health' }
