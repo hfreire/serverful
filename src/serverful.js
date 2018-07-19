@@ -21,13 +21,18 @@ const Health = require('health-checkup')
 const { Server } = require('hapi')
 const Boom = require('boom')
 
+const Route = require('./routes/route')
+
 const Inert = require('inert')
 const Vision = require('vision')
 const HapiSwagger = {
   register: require('hapi-swagger'),
   options: {
     info: { title: NAME, version: VERSION },
-    documentationPath: '/docs',
+    basePath: Route.basePath,
+    jsonPath: `${Route.basePath}/swagger.json`,
+    swaggerUIPath: `${Route.basePath}/swaggerui/`,
+    documentationPath: `${Route.basePath}/docs`,
     tags: [
       { name: 'ping', description: 'Query service status' },
       { name: 'healthcheck', description: 'Query service health' }
@@ -69,8 +74,6 @@ const apiKeyScheme = () => {
     }
   }
 }
-
-const Route = require('./routes/route')
 
 const { readdirSync, lstatSync } = require('fs')
 const { join, dirname } = require('path')

@@ -1,9 +1,11 @@
 /*
- * Copyright (c) 2017, Hugo Freire <hugo@exec.sh>.
+ * Copyright (c) 2018, Hugo Freire <hugo@exec.sh>.
  *
  * This source code is licensed under the license found in the
  * LICENSE.md file in the root directory of this source tree.
  */
+
+const BASE_PATH = process.env.BASE_PATH
 
 class Route {
   constructor (method, path, description, notes) {
@@ -11,6 +13,10 @@ class Route {
     this.path = path
     this.description = description
     this.notes = notes
+  }
+
+  static get basePath () {
+    return BASE_PATH
   }
 
   payload () {}
@@ -42,7 +48,7 @@ class Route {
   toRoute () {
     return {
       method: this.method,
-      path: this.path,
+      path: BASE_PATH ? `${BASE_PATH}${this.path}` : this.path,
       config: {
         payload: this.payload(),
         handler: this.handler,
