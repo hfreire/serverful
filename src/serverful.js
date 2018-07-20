@@ -36,7 +36,8 @@ const HapiSwagger = {
     tags: [
       { name: 'ping', description: 'Query service status' },
       { name: 'healthcheck', description: 'Query service health' }
-    ]
+    ],
+    schemes: [ 'http', 'https' ]
   }
 }
 const HapiPagination = {
