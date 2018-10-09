@@ -5,28 +5,32 @@
  * LICENSE.md file in the root directory of this source tree.
  */
 
+/* eslint-disable new-cap */
+
 const NAME = process.env.NAME
 const VERSION = process.env.VERSION
 const PORT = process.env.PORT || 3000
 const API_KEYS = process.env.API_KEYS
-const SO_TIMEOUT = process.env.SO_TIMEOUT
 
 const _ = require('lodash')
-const Promise = require('bluebird')
 
 const Logger = require('modern-logger')
 
 const Health = require('health-checkup')
 
-const { Server } = require('hapi')
+const Hapi = require('hapi')
 const Boom = require('boom')
 
 const Route = require('./routes/route')
 
-const Inert = require('inert')
-const Vision = require('vision')
+const Inert = {
+  plugin: require('inert')
+}
+const Vision = {
+  plugin: require('vision')
+}
 const HapiSwagger = {
-  register: require('hapi-swagger'),
+  plugin: require('hapi-swagger'),
   options: {
     info: { title: NAME, version: VERSION },
     basePath: Route.BASE_PATH,
@@ -41,7 +45,7 @@ const HapiSwagger = {
   }
 }
 const HapiPagination = {
-  register: require('hapi-pagination'),
+  plugin: require('hapi-pagination'),
   options: {
     query: {
       page: {
@@ -53,33 +57,70 @@ const HapiPagination = {
     }
   }
 }
-const plugins = [ Inert, Vision, HapiSwagger, HapiPagination ]
-
-const apiKeys = _.words(API_KEYS, /[^, ]+/g)
-
-const apiKeyScheme = () => {
-  return {
-    authenticate: function (request, reply) {
-      const { headers, query } = request
-
-      const apiKey = headers[ 'x-api-key' ] || (query && query.key)
-      if (!apiKey) {
-        return reply(Boom.unauthorized('Missing API key'))
-      }
-
-      if (!_.includes(apiKeys, apiKey)) {
-        return reply(Boom.unauthorized('Invalid API key'))
-      }
-
-      return reply.continue({ credentials: { apiKey } })
-    }
-  }
-}
-
 const { readdirSync, lstatSync } = require('fs')
 const { join, dirname } = require('path')
 
-const configureRoutes = function () {
+const apiKeys = _.words(API_KEYS, /[^, ]+/g)
+
+const registerEventListeners = function () {
+  this._server.events.on('start', () => Logger.info(`Started :rocket: HTTP server on port ${PORT}`))
+  this._server.events.on('stop', () => Logger.info('Stopped HTTP server'))
+  this._server.events.on('route', ({ path }) => Logger.info(`Registered route ${path}`))
+  this._server.events.on('response', ({ info, method, url, response, headers, query, route }) => {
+    if (!_.includes(route.settings.tags, 'api')) {
+      return
+    }
+
+    let level = 'info'
+
+    if (_.includes(route.settings.tags, 'utils')) {
+      level = 'debug'
+    }
+
+    const remoteAddress = info.remoteAddress
+    const path = url.path
+    const statusCode = response.statusCode
+    const duration = Date.now() - info.received
+    const userAgent = headers[ 'user-agent' ] || '-'
+    const apiKey = headers[ 'x-api-key' ] || query.key || '-'
+
+    Logger[ level ](`${remoteAddress} - "${method.toUpperCase()} ${path}" ${statusCode} ${duration} "${userAgent}" "${apiKey}"`)
+  })
+  this._server.events.on('request', (request, { channel, error }) => {
+    if (channel === 'error') {
+      Logger.error(error)
+    }
+  })
+}
+
+const registerAuthenticationScheme = function () {
+  const apiKeyScheme = () => {
+    return {
+      authenticate: (request, h) => {
+        const { headers, query } = request
+
+        const apiKey = headers[ 'x-api-key' ] || (query && query.key)
+        if (!apiKey) {
+          throw Boom.unauthorized('Missing API key')
+        }
+
+        if (!_.includes(apiKeys, apiKey)) {
+          throw Boom.unauthorized('Invalid API key')
+        }
+
+        return h.authenticated({ credentials: { apiKey } })
+      }
+    }
+  }
+
+  if (!_.isEmpty(apiKeys)) {
+    this._server.auth.scheme('apiKey', apiKeyScheme)
+    this._server.auth.strategy('default', 'apiKey')
+    this._server.auth.default('default')
+  }
+}
+
+const registerRoutes = function () {
   const paths = [ join(__dirname, '/routes'), join(dirname(require.main.filename), '/routes') ]
 
   const loadPathRoutes = (path) => {
@@ -119,11 +160,11 @@ const configureRoutes = function () {
 
         const route = module.toRoute()
 
-        if (!_.isEmpty(apiKeys) && _.isUndefined(_.get(route, 'config.auth'))) {
-          _.set(route, 'config.auth', 'default')
+        if (!_.isEmpty(apiKeys) && _.isUndefined(_.get(route, 'options.auth'))) {
+          _.set(route, 'options.auth', 'default')
         }
 
-        this._http.route(route)
+        this._server.route(route)
       } catch (error) {
         Logger.error(error)
       }
@@ -133,24 +174,30 @@ const configureRoutes = function () {
   _.forEach(paths, (path) => loadPathRoutes(path))
 }
 
+const registerPlugins = function () {
+  const plugins = [ Inert, Vision, HapiSwagger, HapiPagination ]
+
+  _.forEach(plugins, async (plugin) => {
+    try {
+      await this._server.register(plugin)
+
+      const name = _.get(plugin, 'plugin.plugin.name', _.get(plugin, 'plugin.plugin.pkg.name'))
+      Logger.info(`Registered plugin ${name}`)
+    } catch (error) {
+      Logger.error()
+    }
+  })
+}
+
 const defaultOptions = {
   hapi: {
-    server: {
-      debug: false,
-      load: {
-        sampleInterval: 60000
-      },
-      connections: {
-        routes: {
-          timeout: {
-            server: false,
-            socket: SO_TIMEOUT
-          }
-        }
-      }
+    port: PORT,
+    debug: false,
+    load: {
+      sampleInterval: 60000
     },
-    connection: {
-      port: PORT
+    plugins: {
+      'hapi-swagger': {}
     }
   }
 }
@@ -159,71 +206,39 @@ class Serverful {
   constructor (options = {}) {
     this._options = _.defaultsDeep({}, options, defaultOptions)
 
-    this._http = Promise.promisifyAll(new Server(_.get(this._options, 'hapi.server')))
+    this._server = new Hapi.server(_.get(this._options, 'hapi'))
 
-    this._http.connection(_.get(this._options, 'hapi.connection'))
+    registerEventListeners.bind(this)()
+    registerAuthenticationScheme.bind(this)()
+    registerRoutes.bind(this)()
 
-    this._http.on('start', () => Logger.info(`Started :rocket: HTTP server on port ${PORT}`))
-    this._http.on('stop', () => Logger.info('Stopped HTTP server'))
-    this._http.on('response', ({ info, method, url, response, headers, query, route }) => {
-      if (!_.includes(route.settings.tags, 'api')) {
-        return
-      }
-
-      let level = 'info'
-
-      if (_.includes(route.settings.tags, 'utils')) {
-        level = 'debug'
-      }
-
-      const remoteAddress = info.remoteAddress
-      const path = url.path
-      const statusCode = response.statusCode
-      const duration = Date.now() - info.received
-      const userAgent = headers[ 'user-agent' ] || '-'
-      const apiKey = headers[ 'x-api-key' ] || query.key || '-'
-
-      Logger[ level ](`${remoteAddress} - "${method.toUpperCase()} ${path}" ${statusCode} ${duration} "${userAgent}" "${apiKey}"`)
-    })
-    this._http.on('request-error', (request, error) => Logger.error(error))
-
-    if (!_.isEmpty(apiKeys)) {
-      this._http.auth.scheme('apiKey', apiKeyScheme)
-      this._http.auth.strategy('default', 'apiKey')
-      this._http.auth.default('default')
-    }
-
-    this._http.register(plugins)
-
-    configureRoutes.bind(this)()
-
-    Health.addCheck('server', () => Promise.try(() => {
-      if (!this._http.load) {
+    Health.addCheck('server', async () => {
+      if (!this._server.load) {
         throw new Error('Unable to read server load metrics')
       }
-    }))
-  }
-
-  start () {
-    return Promise.try(() => {
-      if (this._isRunning) {
-        return
-      }
-
-      return this._http.startAsync()
-        .then(() => { this._isRunning = true })
     })
   }
 
-  stop () {
-    return Promise.try(() => {
-      if (!this._isRunning) {
-        return
-      }
+  async start () {
+    if (_.get(this._server, 'app.started')) {
+      return
+    }
 
-      return this._http.stopAsync()
-        .then(() => { delete this._isRunning })
-    })
+    await registerPlugins.bind(this)()
+
+    await this._server.start()
+
+    _.set(this._server, 'app.started', true)
+  }
+
+  async stop (timeout = 1000) {
+    if (!_.get(this._server, 'app.started')) {
+      return
+    }
+
+    await this._server.stop({ timeout })
+
+    _.set(this._server, 'app.started', false)
   }
 }
 

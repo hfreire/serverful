@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Hugo Freire <hugo@exec.sh>.
+ * Copyright (c) 2018, Hugo Freire <hugo@exec.sh>.
  *
  * This source code is licensed under the license found in the
  * LICENSE.md file in the root directory of this source tree.
@@ -11,7 +11,7 @@ describe('Healthcheck', () => {
   let Joi
   let Health
 
-  before(() => {
+  beforeAll(() => {
     serverful = td.object([])
     serverful.Route = td.constructor([])
 
@@ -25,17 +25,8 @@ describe('Healthcheck', () => {
   describe('when handling a request to check a healthy server', () => {
     const status = [ { is_healthy: true } ]
     const request = undefined
-    let code
-    let reply
-
-    before(() => {
-      code = td.function()
-      reply = td.function()
-    })
 
     beforeEach(() => {
-      td.when(reply(td.matchers.anything()), { ignoreExtraArgs: true }).thenReturn({ code })
-
       td.replace('serverful', serverful)
 
       td.replace('joi', Joi)
@@ -46,40 +37,24 @@ describe('Healthcheck', () => {
       subject = require('../../../src/routes/utils/healthcheck')
     })
 
-    it('should return server status', () => {
-      return subject.handler(request, reply)
-        .then(() => {
-          const captor = td.matchers.captor()
+    it('should return server status', async () => {
+      const result = await subject.handler(request)
 
-          td.verify(reply(td.matchers.anything(), captor.capture()), { times: 1 })
-
-          const response = captor.value
-          response.should.have.property('status')
-          response.status.should.be.equal(status)
-        })
-    })
-
-    it('should reply with a 200 status code', () => {
-      return subject.handler(request, reply)
-        .then(() => {
-          td.verify(code(200), { times: 1 })
-        })
+      expect(result).toEqual(status)
     })
   })
 
   describe('when handling a request to check a unhealthy server', () => {
     const status = [ { is_healthy: false } ]
     const request = undefined
-    let code
-    let reply
+    let h
 
-    before(() => {
-      code = td.function()
-      reply = td.function()
+    beforeAll(() => {
+      h = td.object([ 'response', 'code' ])
     })
 
     beforeEach(() => {
-      td.when(reply(td.matchers.anything()), { ignoreExtraArgs: true }).thenReturn({ code })
+      td.when(h.response(td.matchers.anything()), { ignoreExtraArgs: true }).thenReturn(h)
 
       td.replace('serverful', serverful)
 
@@ -91,24 +66,16 @@ describe('Healthcheck', () => {
       subject = require('../../../src/routes/utils/healthcheck')
     })
 
-    it('should return server status', () => {
-      return subject.handler(request, reply)
-        .then(() => {
-          const captor = td.matchers.captor()
+    it('should return server status', async () => {
+      await subject.handler(request, h)
 
-          td.verify(reply(td.matchers.anything(), captor.capture()), { times: 1 })
-
-          const response = captor.value
-          response.should.have.property('status')
-          response.status.should.be.equal(status)
-        })
+      td.verify(h.response(status), { times: 1 })
     })
 
-    it('should reply with a 503 status code', () => {
-      return subject.handler(request, reply)
-        .then(() => {
-          td.verify(code(503), { times: 1 })
-        })
+    it('should reply with a 503 status code', async () => {
+      await subject.handler(request, h)
+
+      td.verify(h.code(503), { times: 1 })
     })
   })
 
@@ -126,7 +93,7 @@ describe('Healthcheck', () => {
     it('should not require authenticate', () => {
       const auth = subject.auth()
 
-      auth.should.be.equal(false)
+      expect(auth).toBeFalsy()
     })
   })
 })

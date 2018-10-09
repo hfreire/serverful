@@ -13,7 +13,6 @@
 * [Swagger](http://swagger.io) API `/docs` :white_check_mark: 
 * Response pagination using [hapi-pagination](https://github.com/fknop/hapi-pagination) :white_check_mark:
 * Logs HTTP requests and server errors using [modern-logger](https://github.com/hfreire/modern-logger) :white_check_mark:
-* Supports [Bluebird](https://github.com/petkaantonov/bluebird) :bird: promises :white_check_mark:
 
 ### How to install
 ```
