@@ -72,6 +72,9 @@
       "src/**/*.js"
     ]
   },
+  "release": {
+    "analyzeCommits": "simple-commit-message"
+  },
   "scripts": {
     "eslint": "node_modules/.bin/eslint --ext .json --ext .js .",
     "jest": "./node_modules/.bin/jest",
@@ -84,8 +87,5 @@
     "compile": "npm run clean && npm run babel",
     "commit": "./node_modules/.bin/commit-wizard",
     "prepublish": "npm run compile"
-  },
-  "release": {
-    "analyzeCommits": "simple-commit-message"
   }
 }
