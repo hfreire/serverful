@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Hugo Freire <hugo@exec.sh>.
+ * Copyright (c) 2018, Hugo Freire <hugo@exec.sh>.
  *
  * This source code is licensed under the license found in the
  * LICENSE.md file in the root directory of this source tree.
@@ -18,13 +18,16 @@ class Healthcheck extends Route {
     super('GET', HEALTHCHECK_PATH, 'Health check', 'Returns a list of health checks')
   }
 
-  handler (request, reply) {
-    return Health.checkup()
-      .then((status) => {
-        const statusCode = _.find(status, (check) => !check.is_healthy) ? 503 : 200
+  async handler (request, h) {
+    const status = await Health.checkup()
 
-        return reply(null, { status }).code(statusCode)
-      })
+    if (_.find(status, (check) => !check.is_healthy)) {
+      h.response(status).code(503)
+
+      return
+    }
+
+    return status
   }
 
   tags () {
