@@ -65,7 +65,7 @@ const apiKeys = _.words(API_KEYS, /[^, ]+/g)
 const registerEventListeners = function () {
   this._server.events.on('start', () => Logger.info(`Started :rocket: HTTP server on port ${PORT}`))
   this._server.events.on('stop', () => Logger.info('Stopped HTTP server'))
-  this._server.events.on('route', ({ path }) => Logger.info(`Registered route ${path}`))
+  this._server.events.on('route', ({ path }) => Logger.debug(`Registered route ${path}`))
   this._server.events.on('response', ({ info, method, url, response, headers, query, route }) => {
     if (!_.includes(route.settings.tags, 'api')) {
       return
@@ -182,9 +182,9 @@ const registerPlugins = function () {
       await this._server.register(plugin)
 
       const name = _.get(plugin, 'plugin.plugin.name', _.get(plugin, 'plugin.plugin.pkg.name'))
-      Logger.info(`Registered plugin ${name}`)
+      Logger.debug(`Registered plugin ${name}`)
     } catch (error) {
-      Logger.error()
+      Logger.error(error)
     }
   })
 }
