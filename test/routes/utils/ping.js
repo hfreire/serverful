@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Hugo Freire <hugo@exec.sh>.
+ * Copyright (c) 2018, Hugo Freire <hugo@exec.sh>.
  *
  * This source code is licensed under the license found in the
  * LICENSE.md file in the root directory of this source tree.
@@ -10,7 +10,7 @@ describe('Ping', () => {
   let serverful
   let Joi
 
-  before(() => {
+  beforeAll(() => {
     serverful = td.object([])
     serverful.Route = td.constructor([])
 
@@ -23,7 +23,7 @@ describe('Ping', () => {
     const request = undefined
     let reply
 
-    before(() => {
+    beforeAll(() => {
       reply = td.function()
     })
 
@@ -36,15 +36,9 @@ describe('Ping', () => {
     })
 
     it('should return a pong', () => {
-      subject.handler(request, reply)
+      const result = subject.handler(request, reply)
 
-      const captor = td.matchers.captor()
-
-      td.verify(reply(td.matchers.anything(), captor.capture()), { times: 1 })
-
-      const response = captor.value
-      response.should.have.property('answer')
-      response.answer.should.be.equal('pong')
+      expect(result).toEqual({ answer: 'pong' })
     })
   })
 
@@ -60,7 +54,7 @@ describe('Ping', () => {
     it('should not require authenticate', () => {
       const auth = subject.auth()
 
-      auth.should.be.equal(false)
+      expect(auth).toBeFalsy()
     })
   })
 
@@ -77,7 +71,7 @@ describe('Ping', () => {
     it('should configure hapi-swagger plugin', () => {
       const plugins = subject.plugins()
 
-      plugins.should.have.property('hapi-swagger')
+      expect(plugins).toHaveProperty('hapi-swagger')
     })
   })
 })

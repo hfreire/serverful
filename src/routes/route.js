@@ -5,6 +5,7 @@
  * LICENSE.md file in the root directory of this source tree.
  */
 
+const SO_TIMEOUT = process.env.SO_TIMEOUT
 const BASE_PATH = process.env.BASE_PATH || '/'
 
 class Route {
@@ -21,8 +22,7 @@ class Route {
 
   payload () {}
 
-  handler (request, reply) {
-    return reply(null)
+  handler (request, h) {
   }
 
   auth () {}
@@ -45,11 +45,18 @@ class Route {
     }
   }
 
+  timeout () {
+    return {
+      server: false,
+      socket: SO_TIMEOUT
+    }
+  }
+
   toRoute () {
     return {
       method: this.method,
       path: BASE_PATH === '/' ? this.path : `${BASE_PATH}${this.path}`,
-      config: {
+      options: {
         payload: this.payload(),
         handler: this.handler,
         auth: this.auth(),

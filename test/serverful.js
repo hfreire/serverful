@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Hugo Freire <hugo@exec.sh>.
+ * Copyright (c) 2018, Hugo Freire <hugo@exec.sh>.
  *
  * This source code is licensed under the license found in the
  * LICENSE.md file in the root directory of this source tree.
@@ -20,16 +20,17 @@ describe('Serverful', () => {
   let pingRoute
   let healthcheckRoute
 
-  before(() => {
+  beforeAll(() => {
     fs = td.object([ 'readdirSync', 'lstatSync' ])
 
     Hapi = td.object([])
-    Hapi.Server = td.constructor([ 'connection', 'auth', 'on', 'route', 'start', 'stop', 'register' ])
+    Hapi.server = td.constructor([ 'auth', 'events', 'start', 'stop', 'register' ])
 
-    Hapi.Server.prototype.auth.scheme = td.function()
-    Hapi.Server.prototype.auth.strategy = td.function()
-    Hapi.Server.prototype.auth.default = td.function()
-    Hapi.Server.prototype.app = td.object([])
+    Hapi.server.prototype.auth.scheme = td.function()
+    Hapi.server.prototype.auth.strategy = td.function()
+    Hapi.server.prototype.auth.default = td.function()
+    Hapi.server.prototype.app = td.object([])
+    Hapi.server.prototype.events = td.object([ 'on' ])
 
     Boom = td.object([])
 
@@ -90,27 +91,27 @@ describe('Serverful', () => {
     })
 
     it('should listen on hapi server start event', () => {
-      td.verify(Hapi.Server.prototype.on('start'), { times: 1, ignoreExtraArgs: true })
+      td.verify(Hapi.server.prototype.events.on('start'), { times: 1, ignoreExtraArgs: true })
     })
 
     it('should listen on hapi server stop event', () => {
-      td.verify(Hapi.Server.prototype.on('stop'), { times: 1, ignoreExtraArgs: true })
+      td.verify(Hapi.server.prototype.events.on('stop'), { times: 1, ignoreExtraArgs: true })
+    })
+
+    it('should listen on hapi server route event', () => {
+      td.verify(Hapi.server.prototype.events.on('route'), { times: 1, ignoreExtraArgs: true })
     })
 
     it('should listen on hapi server response event', () => {
-      td.verify(Hapi.Server.prototype.on('response'), { times: 1, ignoreExtraArgs: true })
+      td.verify(Hapi.server.prototype.events.on('response'), { times: 1, ignoreExtraArgs: true })
     })
 
-    it('should listen on hapi server request-error', () => {
-      td.verify(Hapi.Server.prototype.on('request-error'), { times: 1, ignoreExtraArgs: true })
+    it.skip('should register route to ping', () => {
+      td.verify(Hapi.server.prototype.register(pingRouteConfig), { times: 1 })
     })
 
-    it.skip('should configure route to ping', () => {
-      td.verify(Hapi.Server.prototype.route(pingRouteConfig), { times: 1 })
-    })
-
-    it.skip('should configure route to healthcheck', () => {
-      td.verify(Hapi.Server.prototype.route(healthcheckRouteConfig), { times: 1 })
+    it.skip('should register route to healthcheck', () => {
+      td.verify(Hapi.server.prototype.register(healthcheckRouteConfig), { times: 1 })
     })
 
     it('should add server health check', () => {
@@ -120,7 +121,7 @@ describe('Serverful', () => {
 
   describe('when starting a server', () => {
     beforeEach(() => {
-      td.when(Hapi.Server.prototype.start()).thenCallback()
+      td.when(Hapi.server.prototype.start()).thenCallback()
       td.replace('hapi', Hapi)
 
       td.replace('boom', Boom)
@@ -150,14 +151,14 @@ describe('Serverful', () => {
     it('should invoke hapi server start', () => {
       return subject.start()
         .finally(() => {
-          td.verify(Hapi.Server.prototype.start(), { times: 1, ignoreExtraArgs: true })
+          td.verify(Hapi.server.prototype.start(), { times: 1, ignoreExtraArgs: true })
         })
     })
   })
 
   describe('when starting a server that is already running', () => {
     beforeEach(() => {
-      td.when(Hapi.Server.prototype.start()).thenCallback()
+      td.when(Hapi.server.prototype.start()).thenCallback()
       td.replace('hapi', Hapi)
 
       td.replace('boom', Boom)
@@ -188,7 +189,7 @@ describe('Serverful', () => {
     it('should not invoke hapi server start', () => {
       return subject.start()
         .finally(() => {
-          td.verify(Hapi.Server.prototype.start(), { times: 0 })
+          td.verify(Hapi.server.prototype.start(), { times: 0 })
         })
     })
   })
@@ -197,7 +198,7 @@ describe('Serverful', () => {
     const error = new Error('my-error-message')
 
     beforeEach(() => {
-      td.when(Hapi.Server.prototype.start()).thenCallback(error)
+      td.when(Hapi.server.prototype.start()).thenCallback(error)
       td.replace('hapi', Hapi)
 
       td.replace('boom', Boom)
@@ -234,8 +235,8 @@ describe('Serverful', () => {
 
   describe('when stopping a running server', () => {
     beforeEach(() => {
-      td.when(Hapi.Server.prototype.start()).thenCallback()
-      td.when(Hapi.Server.prototype.stop()).thenCallback()
+      td.when(Hapi.server.prototype.start()).thenCallback()
+      td.when(Hapi.server.prototype.stop()).thenCallback()
       td.replace('hapi', Hapi)
 
       td.replace('boom', Boom)
@@ -266,7 +267,7 @@ describe('Serverful', () => {
     it('should invoke hapi server stop', () => {
       return subject.stop()
         .finally(() => {
-          td.verify(Hapi.Server.prototype.stop(), { times: 1, ignoreExtraArgs: true })
+          td.verify(Hapi.server.prototype.stop(), { times: 1, ignoreExtraArgs: true })
         })
     })
   })
@@ -308,8 +309,8 @@ describe('Serverful', () => {
     const error = new Error()
 
     beforeEach(() => {
-      td.when(Hapi.Server.prototype.start()).thenCallback()
-      td.when(Hapi.Server.prototype.stop()).thenCallback(error)
+      td.when(Hapi.server.prototype.start()).thenCallback()
+      td.when(Hapi.server.prototype.stop()).thenCallback(error)
       td.replace('hapi', Hapi)
 
       td.replace('boom', Boom)

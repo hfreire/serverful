@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Hugo Freire <hugo@exec.sh>.
+ * Copyright (c) 2018, Hugo Freire <hugo@exec.sh>.
  *
  * This source code is licensed under the license found in the
  * LICENSE.md file in the root directory of this source tree.
@@ -12,19 +12,19 @@ describe('Route', () => {
 
   describe('when handling a request', () => {
     const request = undefined
-    let reply
+    let h
 
     beforeEach(() => {
-      reply = td.function()
+      h = td.function()
 
       const Route = require('../../src/routes/route')
       subject = new Route()
     })
 
-    it('should return nothing', () => {
-      subject.handler(request, reply)
+    it('should return undefined', () => {
+      const result = subject.handler(request, h)
 
-      td.verify(reply(null), { times: 1 })
+      expect(result).toBeUndefined()
     })
   })
 
@@ -37,19 +37,19 @@ describe('Route', () => {
     it('should have a method', () => {
       const route = subject.toRoute()
 
-      route.should.have.property('method')
+      expect(route).toHaveProperty('method')
     })
 
     it('should have a path', () => {
       const route = subject.toRoute()
 
-      route.should.have.property('path')
+      expect(route).toHaveProperty('path')
     })
 
-    it('should have a config', () => {
+    it('should have a options', () => {
       const route = subject.toRoute()
 
-      route.should.have.property('config')
+      expect(route).toHaveProperty('options')
     })
   })
 })
