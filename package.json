@@ -18,13 +18,13 @@
   "homepage": "https://github.com/hfreire/serverful#readme",
   "dependencies": {
     "boom": "7.2.1",
-    "hapi": "17.6.0",
+    "hapi": "17.6.1",
     "hapi-pagination": "2.0.1",
     "hapi-swagger": "9.1.2",
-    "inert": "5.1.0",
+    "inert": "5.1.1",
     "joi": "14.0.3",
     "lodash": "4.17.11",
-    "vision": "5.4.1"
+    "vision": "5.4.2"
   },
   "peerDependencies": {
     "health-checkup": ">=1.0.8",
