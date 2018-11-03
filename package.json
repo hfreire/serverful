@@ -22,7 +22,7 @@
     "hapi-pagination": "2.0.1",
     "hapi-swagger": "9.1.2",
     "inert": "5.1.1",
-    "joi": "14.0.3",
+    "joi": "14.0.4",
     "lodash": "4.17.11",
     "vision": "5.4.2"
   },
