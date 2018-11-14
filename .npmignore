@@ -1,3 +1,10 @@
+.idea/
+coverage/
 src/
 test/
-docs/
+.babelrc
+.eslintignore
+.eslintrc
+.gitignore
+.travis.yml
+README.md
