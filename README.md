@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/hfreire/serverful.svg?branch=master)](https://travis-ci.org/hfreire/serverful)
 [![Coverage Status](https://coveralls.io/repos/github/hfreire/serverful/badge.svg?branch=master)](https://coveralls.io/github/hfreire/serverful?branch=master)
+[![Known Vulnerabilities](https://snyk.io/test/github/hfreire/serverful/badge.svg)](https://snyk.io/test/github/hfreire/serverful)
 [![](https://img.shields.io/github/release/hfreire/serverful.svg)](https://github.com/hfreire/serverful/releases)
 [![Version](https://img.shields.io/npm/v/serverful.svg)](https://www.npmjs.com/package/serverful)
 [![Downloads](https://img.shields.io/npm/dt/serverful.svg)](https://www.npmjs.com/package/serverful) 
@@ -52,7 +53,7 @@ All donation proceedings will go to the [Sverige för UNHCR](https://sverigeforu
 
 ### Used by
 * [get-me-a-date](https://github.com/hfreire/get-me-a-date) - :heart_eyes: Help me get a :cupid: date tonight :first_quarter_moon_with_face:
-* [watch-rtp-play](https://github.com/hfreire/watch-rtp-play) - :tv: Watch and :radio: listen 🇵🇹 RTP Play without a :computer: browser
+* [serverful](https://github.com/hfreire/serverful) - :tv: Watch and :radio: listen 🇵🇹 RTP Play without a :computer: browser
 * [browser-as-a-service](https://github.com/hfreire/browser-as-a-service) - A web browser :earth_americas: hosted as a service, to render your JavaScript web pages as HTML
 
 ### License
