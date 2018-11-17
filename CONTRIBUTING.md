@@ -11,7 +11,7 @@ git clone https://github.com/my-github-username/serverful
 
 Change current directory
 ```
-cd get-me-date
+cd serverful
 ```
 
 Install NPM dependencies
