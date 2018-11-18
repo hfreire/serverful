@@ -1,10 +1,6 @@
-.idea/
-coverage/
 src/
 test/
 .babelrc
-.eslintignore
-.eslintrc
-.gitignore
+.eslint*
+.snyk
 .travis.yml
-README.md
