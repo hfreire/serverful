@@ -74,9 +74,7 @@
       "src/**/*.js"
     ]
   },
-  "release": {
-    "analyzeCommits": "simple-commit-message"
-  },
+  "release": {},
   "scripts": {
     "eslint": "node_modules/.bin/eslint --ext .json --ext .js .",
     "jest": "./node_modules/.bin/jest",
