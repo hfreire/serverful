@@ -50,7 +50,7 @@
     "semantic-release": "15.12.4",
     "testdouble": "3.9.1",
     "testdouble-jest": "2.0.0",
-    "snyk": "1.116.0"
+    "snyk": "1.116.1"
   },
   "config": {
     "pre-git": {
