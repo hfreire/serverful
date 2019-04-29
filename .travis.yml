@@ -1,0 +1,26 @@
+language: node_js
+node_js:
+- 10.11
+cache:
+  directories:
+  - node_modules
+notifications:
+  email: false
+  slack:
+    rooms:
+      secure: og8AuT1SuOdAPYM0i35WOKMTFQpTQVQqWOGKie8G98nAG0hRLxlGsKvLiperi7VHW2zj7/YbA5FbSECMVn/m3tfPqBmWaoR1JbImSsBq/OKE2O/aijnm89oxXrqPbWbItaL8TjekfE5YERYT5Wj13c7cLyl4lp/wohMSRm0gcz/paIr1AIHspX6Be28DsNSsZhuafBRfYsWDoXM2+keEvLzLNmhWDUNohUU0IsO950vzlUV9SyJcFuRsGTvf3DHb89fKmVXWyg0jFZF6PIIWNw5Hd5rBdcEcrphSoiZ3z5GmGdgoKDvU/Ld+nq1ryzOt08e1f+UFbhSykAxDp0gw+i2SNpCDCEZqVVJxF9e6WYrorzW2nQOrX6IYd2R6wq35xSzm3QrgcQ2UTaKRFyWfWsUg0HtAlZfojUqIJvwG/6ndcLnCGYD3f/q7MB8dFdYwgIe2LbFdKT/T8NSnN/BRAfz+/PW+WOxAie4TrpOW1UNWlY520bGOPdWIY+q4JYQZwdBAl3LIpA2oqUOdZPTeLMElcUVD9w0gxwpcy4tR7rJ9VhW8NZpEsHYsocWE5QiYD00m8ojXp2N1lu6B0Y4shPDvj28+QT3rOQ+ZimMZRj1+djjvNMBomon3/LoPswPlIgAlx7HgC3SRCmEK1uwdFNPZGuGgMWCPf1qE7hBZvkM=
+    on_success: never
+    on_failure: change
+    on_pull_requests: false
+install:
+- npm install
+before_install:
+- npm install -g greenkeeper-lockfile@1
+before_script:
+- npm prune
+- greenkeeper-lockfile-update
+after_success:
+- npm run coveralls
+- npm run semantic-release
+after_script:
+- greenkeeper-lockfile-upload
