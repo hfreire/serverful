@@ -24,7 +24,8 @@
     "inert": "5.1.3",
     "joi": "14.3.1",
     "lodash": "4.17.11",
-    "vision": "5.4.4"
+    "vision": "5.4.4",
+    "snyk": "^1.189.0"
   },
   "peerDependencies": {
     "health-checkup": ">=1.0.8",
@@ -49,8 +50,7 @@
     "pre-git": "3.17.1",
     "semantic-release": "15.13.18",
     "testdouble": "3.12.1",
-    "testdouble-jest": "2.0.0",
-    "snyk": "1.189.0"
+    "testdouble-jest": "2.0.0"
   },
   "config": {
     "pre-git": {
@@ -84,10 +84,11 @@
     "semantic-release": "./node_modules/.bin/semantic-release",
     "clean": "rm -rf lib coverage",
     "lint": "npm run eslint",
-    "prepare": "npm run snyk:protect",
+    "prepare": "npm run snyk-protect; npm run snyk:protect",
     "test": "npm run clean && npm run lint && npm run jest",
     "compile": "npm run clean && npm run babel",
     "commit": "./node_modules/.bin/commit-wizard",
-    "prepublish": "npm run compile"
+    "prepublish": "npm run compile",
+    "snyk-protect": "snyk protect"
   }
 }
