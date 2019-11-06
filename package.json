@@ -17,14 +17,14 @@
   },
   "homepage": "https://github.com/hfreire/serverful#readme",
   "dependencies": {
-    "boom": "7.3.0",
-    "hapi": "18.1.0",
-    "hapi-pagination": "2.1.0",
-    "hapi-swagger": "10.0.2",
-    "inert": "5.1.3",
-    "joi": "14.3.1",
-    "lodash": "4.17.15",
-    "vision": "5.4.4"
+    "@hapi/boom": "8.0.1",
+    "@hapi/hapi": "18.4.0",
+    "@hapi/inert": "5.2.2",
+    "@hapi/joi": "16.1.7",
+    "@hapi/vision": "5.5.4",
+    "hapi-pagination": "3.0.0",
+    "hapi-swagger": "10.2.0",
+    "lodash": "4.17.15"
   },
   "peerDependencies": {
     "health-checkup": ">=1.0.8",
@@ -50,7 +50,7 @@
     "semantic-release": "15.13.18",
     "testdouble": "3.12.2",
     "testdouble-jest": "2.0.0",
-    "snyk": "2.0.0"
+    "snyk": "1.243.0"
   },
   "config": {
     "pre-git": {
