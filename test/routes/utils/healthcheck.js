@@ -29,7 +29,7 @@ describe('Healthcheck', () => {
     beforeEach(() => {
       td.replace('serverful', serverful)
 
-      td.replace('joi', Joi)
+      td.replace('@hapi/joi', Joi)
 
       td.replace('health-checkup', Health)
       td.when(Health.checkup()).thenResolve(status)
@@ -58,7 +58,7 @@ describe('Healthcheck', () => {
 
       td.replace('serverful', serverful)
 
-      td.replace('joi', Joi)
+      td.replace('@hapi/joi', Joi)
 
       td.replace('health-checkup', Health)
       td.when(Health.checkup()).thenResolve(status)
@@ -83,7 +83,7 @@ describe('Healthcheck', () => {
     beforeEach(() => {
       td.replace('serverful', serverful)
 
-      td.replace('joi', Joi)
+      td.replace('@hapi/joi', Joi)
 
       td.replace('health-checkup', Health)
 

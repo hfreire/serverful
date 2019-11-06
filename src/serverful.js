@@ -18,16 +18,16 @@ const Logger = require('modern-logger')
 
 const Health = require('health-checkup')
 
-const Hapi = require('hapi')
-const Boom = require('boom')
+const Hapi = require('@hapi/hapi')
+const Boom = require('@hapi/boom')
 
 const Route = require('./routes/route')
 
 const Inert = {
-  plugin: require('inert')
+  plugin: require('@hapi/inert')
 }
 const Vision = {
-  plugin: require('vision')
+  plugin: require('@hapi/vision')
 }
 const HapiSwagger = {
   plugin: require('hapi-swagger'),

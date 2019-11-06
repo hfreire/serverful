@@ -30,7 +30,7 @@ describe('Ping', () => {
     beforeEach(() => {
       td.replace('serverful', serverful)
 
-      td.replace('joi', Joi)
+      td.replace('@hapi/joi', Joi)
 
       subject = require('../../../src/routes/utils/ping')
     })
@@ -46,7 +46,7 @@ describe('Ping', () => {
     beforeEach(() => {
       td.replace('serverful', serverful)
 
-      td.replace('joi', Joi)
+      td.replace('@hapi/joi', Joi)
 
       subject = require('../../../src/routes/utils/ping')
     })
@@ -63,7 +63,7 @@ describe('Ping', () => {
       td.replace('serverful', serverful)
 
       td.when(Joi.object(), { ignoreExtraArgs: true }).thenReturn(Joi)
-      td.replace('joi', Joi)
+      td.replace('@hapi/joi', Joi)
 
       subject = require('../../../src/routes/utils/ping')
     })

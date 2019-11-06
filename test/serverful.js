@@ -62,13 +62,13 @@ describe('Serverful', () => {
       td.when(fs.readdirSync(), { ignoreExtraArgs: true }).thenReturn([])
       td.replace('fs', fs)
 
-      td.replace('hapi', Hapi)
+      td.replace('@hapi/hapi', Hapi)
 
-      td.replace('boom', Boom)
+      td.replace('@hapi/boom', Boom)
 
-      td.replace('inert', Inert)
+      td.replace('@hapi/inert', Inert)
 
-      td.replace('vision', Vision)
+      td.replace('@hapi/vision', Vision)
 
       td.replace('hapi-swagger', HapiSwagger)
 
@@ -122,13 +122,13 @@ describe('Serverful', () => {
   describe('when starting a server', () => {
     beforeEach(() => {
       td.when(Hapi.server.prototype.start()).thenCallback()
-      td.replace('hapi', Hapi)
+      td.replace('@hapi/hapi', Hapi)
 
-      td.replace('boom', Boom)
+      td.replace('@hapi/boom', Boom)
 
-      td.replace('inert', Inert)
+      td.replace('@hapi/inert', Inert)
 
-      td.replace('vision', Vision)
+      td.replace('@hapi/vision', Vision)
 
       td.replace('hapi-swagger', HapiSwagger)
 
@@ -159,13 +159,13 @@ describe('Serverful', () => {
   describe('when starting a server that is already running', () => {
     beforeEach(() => {
       td.when(Hapi.server.prototype.start()).thenCallback()
-      td.replace('hapi', Hapi)
+      td.replace('@hapi/hapi', Hapi)
 
-      td.replace('boom', Boom)
+      td.replace('@hapi/boom', Boom)
 
-      td.replace('inert', Inert)
+      td.replace('@hapi/inert', Inert)
 
-      td.replace('vision', Vision)
+      td.replace('@hapi/vision', Vision)
 
       td.replace('hapi-swagger', HapiSwagger)
 
@@ -199,13 +199,13 @@ describe('Serverful', () => {
 
     beforeEach(() => {
       td.when(Hapi.server.prototype.start()).thenCallback(error)
-      td.replace('hapi', Hapi)
+      td.replace('@hapi/hapi', Hapi)
 
-      td.replace('boom', Boom)
+      td.replace('@hapi/boom', Boom)
 
-      td.replace('inert', Inert)
+      td.replace('@hapi/inert', Inert)
 
-      td.replace('vision', Vision)
+      td.replace('@hapi/vision', Vision)
 
       td.replace('hapi-swagger', HapiSwagger)
 
@@ -237,13 +237,13 @@ describe('Serverful', () => {
     beforeEach(() => {
       td.when(Hapi.server.prototype.start()).thenCallback()
       td.when(Hapi.server.prototype.stop()).thenCallback()
-      td.replace('hapi', Hapi)
+      td.replace('@hapi/hapi', Hapi)
 
-      td.replace('boom', Boom)
+      td.replace('@hapi/boom', Boom)
 
-      td.replace('inert', Inert)
+      td.replace('@hapi/inert', Inert)
 
-      td.replace('vision', Vision)
+      td.replace('@hapi/vision', Vision)
 
       td.replace('hapi-swagger', HapiSwagger)
 
@@ -274,13 +274,13 @@ describe('Serverful', () => {
 
   describe('when stopping a non-running server', () => {
     beforeEach(() => {
-      td.replace('hapi', Hapi)
+      td.replace('@hapi/hapi', Hapi)
 
-      td.replace('boom', Boom)
+      td.replace('@hapi/boom', Boom)
 
-      td.replace('inert', Inert)
+      td.replace('@hapi/inert', Inert)
 
-      td.replace('vision', Vision)
+      td.replace('@hapi/vision', Vision)
 
       td.replace('hapi-swagger', HapiSwagger)
 
@@ -311,13 +311,13 @@ describe('Serverful', () => {
     beforeEach(() => {
       td.when(Hapi.server.prototype.start()).thenCallback()
       td.when(Hapi.server.prototype.stop()).thenCallback(error)
-      td.replace('hapi', Hapi)
+      td.replace('@hapi/hapi', Hapi)
 
-      td.replace('boom', Boom)
+      td.replace('@hapi/boom', Boom)
 
-      td.replace('inert', Inert)
+      td.replace('@hapi/inert', Inert)
 
-      td.replace('vision', Vision)
+      td.replace('@hapi/vision', Vision)
 
       td.replace('hapi-swagger', HapiSwagger)
 

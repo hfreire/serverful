@@ -9,7 +9,7 @@ const PING_PATH = process.env.PING_PATH || '/ping'
 
 const Route = require('../route')
 
-const Joi = require('joi')
+const Joi = require('@hapi/joi')
 
 class Ping extends Route {
   constructor () {
