@@ -18,7 +18,7 @@
   "homepage": "https://github.com/hfreire/serverful#readme",
   "dependencies": {
     "@hapi/boom": "9.0.0",
-    "@hapi/hapi": "19.0.4",
+    "@hapi/hapi": "19.0.5",
     "@hapi/inert": "6.0.1",
     "@hapi/joi": "17.0.2",
     "@hapi/vision": "6.0.0",
