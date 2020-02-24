@@ -1,0 +1,29 @@
+name: cd
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    env:
+      CI: true
+      VERSION_COMMIT: ${{ github.sha }}
+
+    steps:
+      - name: Set VERSION env var
+        run: echo ::set-env name=VERSION::${GITHUB_REF##*/}
+      - uses: actions/checkout@v1
+        with:
+          ref: ${{ github.ref }}
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.14
+      - name: Check if release should be created
+        run: npm run semantic-release
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
