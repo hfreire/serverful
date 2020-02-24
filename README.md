@@ -1,7 +1,6 @@
 # A kickass :muscle: web server :scream_cat: with all the bells :bell: and whistles :sparkles:
 
 [![](https://github.com/hfreire/serverful/workflows/ci/badge.svg)](https://github.com/hfreire/serverful/actions?workflow=ci)
-[![](https://github.com/hfreire/serverful/workflows/cd/badge.svg)](https://github.com/hfreire/serverful/actions?workflow=cd)
 [![Coverage Status](https://coveralls.io/repos/github/hfreire/serverful/badge.svg?branch=master)](https://coveralls.io/github/hfreire/serverful?branch=master)
 [![Known Vulnerabilities](https://snyk.io/test/github/hfreire/serverful/badge.svg)](https://snyk.io/test/github/hfreire/serverful)
 [![](https://img.shields.io/github/release/hfreire/serverful.svg)](https://github.com/hfreire/serverful/releases)
