@@ -30,7 +30,7 @@ class Route {
   plugins () {}
 
   tags () {
-    return ['api']
+    return [ 'api' ]
   }
 
   validate () {
