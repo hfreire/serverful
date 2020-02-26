@@ -1,6 +1,8 @@
+.dependabot/
+.github/
 src/
 test/
 .babelrc
+.editorconfig
 .eslint*
 .snyk
-.travis.yml
