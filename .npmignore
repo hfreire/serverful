@@ -1,8 +1,11 @@
 .dependabot/
 .github/
+.idea/
+coverage/
 src/
 test/
 .babelrc
 .editorconfig
 .eslint*
+.gitignore
 .snyk
