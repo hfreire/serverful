@@ -75,7 +75,7 @@
     ]
   },
   "scripts": {
-    "eslint": "node_modules/.bin/eslint --ext .json --ext .js .",
+    "eslint": "./node_modules/.bin/eslint --ext .json --ext .js .",
     "jest": "./node_modules/.bin/jest",
     "snyk:test": "./node_modules/.bin/snyk test",
     "snyk:protect": "./node_modules/.bin/snyk protect",
