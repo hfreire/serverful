@@ -58,7 +58,6 @@
       "allow-untracked-files": true
     }
   },
-  "snyk": true,
   "jest": {
     "testEnvironment": "node",
     "setupTestFrameworkScriptFile": "./test/helper.js",
@@ -74,6 +73,7 @@
       "src/**/*.js"
     ]
   },
+  "snyk": true,
   "scripts": {
     "eslint": "./node_modules/.bin/eslint --ext .json --ext .js .",
     "jest": "./node_modules/.bin/jest",
