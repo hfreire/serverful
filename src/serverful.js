@@ -210,7 +210,6 @@ class Serverful {
 
     registerEventListeners.bind(this)()
     registerAuthenticationScheme.bind(this)()
-    registerRoutes.bind(this)()
 
     Health.addCheck('server', async () => {
       if (!this._server.load) {
@@ -225,6 +224,8 @@ class Serverful {
     }
 
     await registerPlugins.bind(this)()
+
+    registerRoutes.bind(this)()
 
     await this._server.start()
 
