@@ -24,7 +24,7 @@
     "@hapi/vision": "6.0.0",
     "hapi-pagination": "4.0.0",
     "hapi-swagger": "13.0.2",
-    "lodash": "4.17.18"
+    "lodash": "4.17.19"
   },
   "peerDependencies": {
     "health-checkup": ">=1.0.8",
