@@ -23,7 +23,7 @@
     "@hapi/joi": "17.1.1",
     "@hapi/vision": "6.1.0",
     "hapi-pagination": "4.0.0",
-    "hapi-swagger": "13.1.0",
+    "hapi-swagger": "14.5.4",
     "lodash": "4.17.21"
   },
   "peerDependencies": {
